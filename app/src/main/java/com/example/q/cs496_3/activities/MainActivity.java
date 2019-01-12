@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         loginButton = (LoginButton)findViewById(R.id.login_button);
         loginButton.setReadPermissions("public_profile","user_birthday", "user_friends","user_gender");
         token = AccessToken.getCurrentAccessToken();
+
         //TODO 로그인 되어있다면, 회원일 경우(uid를 통해서 해결) 바로 information으로 이동한다. 회원이 아닌경우 로그아웃을 한다.
         if (token != null){
             String id = Profile.getCurrentProfile().getId();
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            //USER면 바로 information activity로 이동
+            // USER면 바로 information activity로 이동
             if (isUser) {
                 startActivity(new Intent(MainActivity.this, FragmentActivity.class));
                 finish();

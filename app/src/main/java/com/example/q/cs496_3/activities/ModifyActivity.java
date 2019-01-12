@@ -1,11 +1,12 @@
 package com.example.q.cs496_3.activities;
 
 import android.Manifest;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -13,8 +14,10 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
@@ -33,34 +36,36 @@ import com.example.q.cs496_3.https.HttpPatchRequest;
 import com.example.q.cs496_3.https.HttpPostRequest;
 import com.example.q.cs496_3.models.User;
 import com.facebook.Profile;
+import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.face.Face;
+import com.google.android.gms.vision.face.FaceDetector;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.Response;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import cz.msebera.android.httpclient.entity.StringEntity;
 import info.hoang8f.android.segmented.SegmentedGroup;
 
 public class ModifyActivity extends AppCompatActivity {
+    public final int IMAGE_PICK = 100;
+    public final int REQUEST_CODE = 1;
+    public final String TAG = "MODIFY_ACTIVITY";
     private String id;
     private String name;
     private String gender;
-    private String contact;
-    private String job;
-    private String hobby;
     private String birthday;
-    private String residence;
     private RadioButton male, female;
     private boolean isMember;
     private boolean isPhotoChange = false;
@@ -69,7 +74,6 @@ public class ModifyActivity extends AppCompatActivity {
     public File f;
     public String file_name;
     public ImageView editPhoto;
-    public final int REQUEST_CODE = 1;
     JSONObject json;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +134,6 @@ public class ModifyActivity extends AppCompatActivity {
                 name = user.getName();
                 gender = user.getGender();
                 birthday = user.getDate_of_birth();
-                contact = user.getContact();
                 editContact.setText(user.getContact());
                 editResidence.setText(user.getResidence());
                 editJob.setText(user.getJob());
@@ -171,17 +174,16 @@ public class ModifyActivity extends AppCompatActivity {
         }
 
         //이미지 버튼 클릭시
+        // TODO(estanie): 직접 사진 찍어 올리는 기능도 있으면 좋겠다.
         editPhoto.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 //TODO PHOTO SELECT 화면으로 넘어가는 기능
-                Intent fintent = new Intent(Intent.ACTION_GET_CONTENT);
-                fintent.setType("image/jpeg");
-                try {
-                    startActivityForResult(fintent, 100);
-                } catch (ActivityNotFoundException e) {
-
-                }
+                Intent fintent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                fintent.setType("image/*");
+                Log.e(TAG, "Select the images.");
+                startActivityForResult(
+                        Intent.createChooser(fintent, "사진을 선택해주세요."), IMAGE_PICK);
             }
         });
 
@@ -192,7 +194,8 @@ public class ModifyActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //데이터 유효성 검사 Text부분
                 if(notAllWritten()){
-                    Toast toast = Toast.makeText(getApplicationContext(), "간절해야 이루어진다구", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(
+                            getApplicationContext(), R.string.info_not_found, Toast.LENGTH_SHORT);
                     toast.show();
                     return;
                 }
@@ -236,7 +239,8 @@ public class ModifyActivity extends AppCompatActivity {
                                     }
                                 });
                     } catch (NullPointerException e) {
-                        Toast toast = Toast.makeText(getApplicationContext(), "당.당.하.게.얼.굴.공.개", Toast.LENGTH_SHORT);
+                        Toast toast = Toast.makeText(getApplicationContext(),
+                                R.string.face_not_found, Toast.LENGTH_SHORT);
                         toast.show();
                         return;
                     }
@@ -252,7 +256,7 @@ public class ModifyActivity extends AppCompatActivity {
                     if (isMember) {
                         new HttpPatchRequest(str,id).execute();
                     }else{
-                        Log.e("POST STRING", str);
+                        Log.e(TAG, str);
                         new HttpPostRequest(str).execute();
                     }
 
@@ -270,8 +274,14 @@ public class ModifyActivity extends AppCompatActivity {
                 Log.d("Job!!!", editJob.getText().toString());
                 Log.d("Hobby!!!", editHobby.getText().toString());
 
-                //다음 Activity로 이동
-                startActivity(new Intent(ModifyActivity.this, FragmentActivity.class));
+                // 원래 멤버일 경우 이전 페이지로 이동. 아닌 경우, 마음에 드는 얼굴 찾는 페이지로 이동.
+                if (isMember) {
+                    startActivity(new Intent(
+                            ModifyActivity.this, FragmentActivity.class));
+                } else {
+                    startActivity(new Intent(
+                            ModifyActivity.this, SelectPictureActivity.class));
+                }
                 setResult(RESULT_OK);
                 finish();
             }
@@ -305,20 +315,27 @@ public class ModifyActivity extends AppCompatActivity {
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e(TAG, "IMAGE DATA"+data);
         if (data == null)
             return;
         switch (requestCode) {
-            case 100:
+            case IMAGE_PICK:
                 if (resultCode == RESULT_OK) {
-                    path = getRealPathFromURI(this,data.getData());
-                    //file_name = f.getName();
-                    Log.d(" Real Path : ", path);
-                    editPhoto.setImageURI(data.getData());
-                    //upload.setVisibility(View.VISIBLE);
-                    isPhotoChange = true;
+                    if (checkIsFace(data.getData())) {
+                        path = getRealPathFromURI(this, data.getData());
+                        //file_name = f.getName();
+                        Log.d(TAG, "IMAGE PATH: " + path);
+                        Log.d(TAG, "DATA: " + data.getData());
+                        Glide.with(this)
+                                .load(data.getData())
+                                .into(editPhoto);
+                        //upload.setVisibility(View.VISIBLE);
+                        isPhotoChange = true;
+                    }
                 }
         }
     }
+
     public String getRealPathFromURI(Context context, Uri contentUri) {
         Cursor cursor = null;
         try {
@@ -337,5 +354,42 @@ public class ModifyActivity extends AppCompatActivity {
     private String changeOrder(String birthday) {
         String[] date = birthday.split("/");
         return date[2]+"/"+date[0]+"/"+date[1];
+    }
+
+    private Boolean checkIsFace(Uri uri) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        InputStream inputStream;
+        try {
+            inputStream = getBaseContext().getContentResolver().openInputStream(uri);
+        } catch(FileNotFoundException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+        Log.e(TAG, "INPUT STREAM"+inputStream);
+        Bitmap myBitmap = null;
+        try {
+            myBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+        Log.e(TAG, "MY BITMAP"+myBitmap);
+        FaceDetector faceDetector = new FaceDetector.Builder(getApplicationContext()).setTrackingEnabled(false).build();
+        if (!faceDetector.isOperational()) {
+            Toast.makeText(getApplicationContext(),
+                    R.string.detector_not_avaliable, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        Frame frame = new Frame.Builder().setBitmap(myBitmap).build();
+        SparseArray<Face> faces = faceDetector.detect(frame);
+        if (faces.size() == 0) {
+            Toast.makeText(getApplicationContext(),
+                    R.string.face_not_found, Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (faces.size() > 1) {
+            Toast.makeText(getApplicationContext(),
+                    R.string.too_many_face, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 }
