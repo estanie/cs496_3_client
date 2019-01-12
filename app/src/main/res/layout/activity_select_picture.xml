@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- TODO(estanie): UI 고쳐야 할게 많음... ㅎㅎ -->
+    <TextView
+        android:id="@+id/SelectText"
+        style="@style/modifyTitle"
+        app:fontFamily="@font/mf_time_traveler"
+        tools:text="맘에 드는 사람을 10명 이상 선택해 주세요." />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/imageGrid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/selectConfirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:src="@mipmap/edit_button"
+        app:backgroundTint="#ffffff"
+        app:elevation="6dp"
+        android:layout_margin="16dp" />
+
+</android.support.design.widget.CoordinatorLayout>

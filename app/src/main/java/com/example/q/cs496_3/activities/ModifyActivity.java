@@ -365,14 +365,12 @@ public class ModifyActivity extends AppCompatActivity {
             ex.printStackTrace();
             return false;
         }
-        Log.e(TAG, "INPUT STREAM"+inputStream);
         Bitmap myBitmap = null;
         try {
             myBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
         } catch(IOException e){
             e.printStackTrace();
         }
-        Log.e(TAG, "MY BITMAP"+myBitmap);
         FaceDetector faceDetector = new FaceDetector.Builder(getApplicationContext()).setTrackingEnabled(false).build();
         if (!faceDetector.isOperational()) {
             Toast.makeText(getApplicationContext(),
