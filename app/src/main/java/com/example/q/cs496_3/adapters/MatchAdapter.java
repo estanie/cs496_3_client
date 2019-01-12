@@ -1,10 +1,8 @@
-package com.example.q.cs496_2.adapters;
+package com.example.q.cs496_3.adapters;
 
-import android.app.Activity;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +13,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.RequestManager;
-import com.example.q.cs496_2.R;
-import com.example.q.cs496_2.models.User;
+import com.example.q.cs496_3.R;
+import com.example.q.cs496_3.models.User;
 
 import java.util.ArrayList;
 

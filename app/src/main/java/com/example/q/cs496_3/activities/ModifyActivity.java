@@ -1,4 +1,4 @@
-package com.example.q.cs496_2.activities;
+package com.example.q.cs496_3.activities;
 
 import android.Manifest;
 import android.content.ActivityNotFoundException;
@@ -8,8 +8,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -19,24 +17,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.os.*;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.RequestManager;
-import com.example.q.cs496_2.R;
-import com.example.q.cs496_2.adapters.ImageAdapter;
-import com.example.q.cs496_2.https.HttpGetRequest;
-import com.example.q.cs496_2.https.HttpPatchRequest;
-import com.example.q.cs496_2.https.HttpPostRequest;
+import com.example.q.cs496_3.R;
+import com.example.q.cs496_3.adapters.ImageAdapter;
+import com.example.q.cs496_3.https.HttpGetRequest;
+import com.example.q.cs496_3.https.HttpPatchRequest;
+import com.example.q.cs496_3.https.HttpPostRequest;
 import com.facebook.Profile;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -46,11 +40,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.EOFException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 

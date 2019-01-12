@@ -1,13 +1,9 @@
-package com.example.q.cs496_2.adapters;
+package com.example.q.cs496_3.adapters;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-
-import com.example.q.cs496_2.fragments.InformationFragment;
-import com.example.q.cs496_2.fragments.MatchFragment;
-import com.example.q.cs496_2.fragments.OtherFragment;
 
 import java.util.ArrayList;
 import java.util.List;

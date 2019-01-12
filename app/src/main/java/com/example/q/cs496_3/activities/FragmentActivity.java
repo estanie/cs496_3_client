@@ -1,17 +1,16 @@
-package com.example.q.cs496_2.activities;
+package com.example.q.cs496_3.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 
-import com.example.q.cs496_2.R;
-import com.example.q.cs496_2.adapters.PagerAdapter;
-import com.example.q.cs496_2.fragments.InformationFragment;
-import com.example.q.cs496_2.fragments.MatchFragment;
-import com.example.q.cs496_2.fragments.OtherFragment;
+import com.example.q.cs496_3.R;
+import com.example.q.cs496_3.adapters.PagerAdapter;
+import com.example.q.cs496_3.fragments.InformationFragment;
+import com.example.q.cs496_3.fragments.MatchFragment;
+import com.example.q.cs496_3.fragments.OtherFragment;
 
 public class FragmentActivity extends AppCompatActivity {
 

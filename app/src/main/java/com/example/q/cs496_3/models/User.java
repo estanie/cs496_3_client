@@ -1,4 +1,4 @@
-package com.example.q.cs496_2.models;
+package com.example.q.cs496_3.models;
 
 public class User {
     private String image;

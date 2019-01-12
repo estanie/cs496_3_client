@@ -1,4 +1,4 @@
-package com.example.q.cs496_2.fragments;
+package com.example.q.cs496_3.fragments;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -13,24 +13,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.RequestManager;
-import com.bumptech.glide.request.RequestOptions;
-import com.example.q.cs496_2.R;
-import com.example.q.cs496_2.activities.ModifyActivity;
-import com.example.q.cs496_2.adapters.ImageAdapter;
-import com.example.q.cs496_2.activities.MainActivity;
-import com.example.q.cs496_2.https.HttpGetRequest;
+import com.example.q.cs496_3.R;
+import com.example.q.cs496_3.activities.ModifyActivity;
+import com.example.q.cs496_3.adapters.ImageAdapter;
+import com.example.q.cs496_3.activities.MainActivity;
+import com.example.q.cs496_3.https.HttpGetRequest;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 

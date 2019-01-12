@@ -1,4 +1,4 @@
-package com.example.q.cs496_2.fragments;
+package com.example.q.cs496_3.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,10 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.q.cs496_2.R;
-import com.example.q.cs496_2.adapters.OtherAdapter;
-import com.example.q.cs496_2.https.HttpGetRequest;
-import com.example.q.cs496_2.models.User;
+import com.example.q.cs496_3.R;
+import com.example.q.cs496_3.adapters.OtherAdapter;
+import com.example.q.cs496_3.https.HttpGetRequest;
+import com.example.q.cs496_3.models.User;
 import com.facebook.Profile;
 
 import org.json.JSONArray;

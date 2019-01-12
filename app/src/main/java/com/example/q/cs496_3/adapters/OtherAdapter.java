@@ -1,4 +1,4 @@
-package com.example.q.cs496_2.adapters;
+package com.example.q.cs496_3.adapters;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -16,11 +16,10 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.RequestManager;
-import com.example.q.cs496_2.R;
-import com.example.q.cs496_2.https.HttpGetRequest;
-import com.example.q.cs496_2.https.HttpPatchRequest;
-import com.example.q.cs496_2.https.HttpPostRequest;
-import com.example.q.cs496_2.models.User;
+import com.example.q.cs496_3.R;
+import com.example.q.cs496_3.https.HttpGetRequest;
+import com.example.q.cs496_3.https.HttpPatchRequest;
+import com.example.q.cs496_3.models.User;
 import com.facebook.Profile;
 
 import org.json.JSONArray;

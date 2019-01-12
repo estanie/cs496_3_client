@@ -1,4 +1,4 @@
-package com.example.q.cs496_2.adapters;
+package com.example.q.cs496_3.adapters;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;

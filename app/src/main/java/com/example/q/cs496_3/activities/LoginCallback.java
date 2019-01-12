@@ -1,4 +1,4 @@
-package com.example.q.cs496_2.activities;
+package com.example.q.cs496_3.activities;
 
 
 import android.os.Bundle;

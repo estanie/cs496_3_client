@@ -1,4 +1,5 @@
-package com.example.q.cs496_2.https;
+package com.example.q.cs496_3.https;
+
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -8,23 +9,23 @@ import com.google.gson.JsonArray;
 import cz.msebera.android.httpclient.HttpResponse;
 import cz.msebera.android.httpclient.client.HttpClient;
 import cz.msebera.android.httpclient.client.methods.HttpPatch;
-import cz.msebera.android.httpclient.client.methods.HttpPost;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import cz.msebera.android.httpclient.impl.client.HttpClientBuilder;
 
-public class HttpPostRequest extends AsyncTask<String, Void, JsonArray> {
+public class HttpPatchRequest extends AsyncTask<String, Void, JsonArray> {
     HttpClient httpClient = HttpClientBuilder.create().build();
     StringEntity mJsonString;
+    String user_id;
 
-    public HttpPostRequest(StringEntity json_string) {
+    public HttpPatchRequest(StringEntity json_string, String id) {
         mJsonString = json_string;
-        Log.d("Json input is",mJsonString.toString());
+        user_id = id;
     }
 
 
     public JsonArray doInBackground(String... params) {
         try {
-            HttpPost request = new HttpPost("http://143.248.140.106:2580/members");
+            HttpPatch request = new HttpPatch("http://143.248.140.106:2580/members/"+user_id);
             //StringEntity params = new StringEntity(params);
             request.addHeader("content-type","application/json");
             request.addHeader("Accept","application/json");
@@ -34,6 +35,8 @@ public class HttpPostRequest extends AsyncTask<String, Void, JsonArray> {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return null;
+
     }
 }
