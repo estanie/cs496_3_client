@@ -247,25 +247,12 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                     my_linkerList.add(json_my_received);
                     your_linkerList.add(json_your_gave);
 
-                    // patch success, gave, received
-                    StringEntity my_json_string = null;
-                    try {
-                        my_json_string = new StringEntity(my_linkerList.toString());
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
                     //httprequestclass 로 보내서 실행시키기
                     Log.d("NOWPATCH","START1");
-                    new HttpPatchRequest(my_json_string, myId).execute();
+                    new HttpPatchRequest(my_linkerList.toString(), myId).execute();
 
-                    StringEntity your_json_string = null;
-                    try {
-                        your_json_string = new StringEntity(your_linkerList.toString());
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
                     Log.d("NOWPATCH","START2");
-                    new HttpPatchRequest(your_json_string, takerId).execute();
+                    new HttpPatchRequest(your_linkerList.toString(), takerId).execute();
                 } else { // match 실패
                     Toast toast = Toast.makeText(getApplicationContext(), "기다림의 설렘을 느껴봐요!!", Toast.LENGTH_SHORT);
                     toast.show();
@@ -279,10 +266,8 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                         e.printStackTrace();
                     }
                     try {
-                        //http에 넣을 수 있는 형식으로 만들기
-                        StringEntity json_string = new StringEntity(linkerList.toString());
                         //httprequestclass 로 보내서 실행시키기
-                        new HttpPatchRequest(json_string, takerId).execute();
+                        new HttpPatchRequest(linkerList.toString(), takerId).execute();
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -301,10 +286,8 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                         e.printStackTrace();
                     }
                     try {
-                        //http에 넣을 수 있는 형식으로 만들기
-                        StringEntity json_string = new StringEntity(linkerList_2.toString());
                         //httprequestclass 로 보내서 실행시키기
-                        new HttpPatchRequest(json_string, myId).execute();
+                        new HttpPatchRequest(linkerList_2.toString(), myId).execute();
 
                     } catch (Exception e) {
                         e.printStackTrace();

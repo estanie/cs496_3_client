@@ -31,7 +31,10 @@ import com.example.q.cs496_3.adapters.ImageAdapter;
 import com.example.q.cs496_3.https.HttpGetRequest;
 import com.example.q.cs496_3.https.HttpPatchRequest;
 import com.example.q.cs496_3.https.HttpPostRequest;
+import com.example.q.cs496_3.models.User;
 import com.facebook.Profile;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.Response;
@@ -119,22 +122,19 @@ public class ModifyActivity extends AppCompatActivity {
             id = Profile.getCurrentProfile().getId();
             String myUrl = "http://143.248.140.106:2580/members/"+id;
             try {
-                JSONObject myJsonObj = new JSONObject(getMyRequest.execute(myUrl).get());
-                json = myJsonObj.getJSONObject("member");
-                name = json.getString("name");
-                gender = json.getString("gender");
-                birthday = json.getString("date_of_birth");
-                contact = json.getString("contact");
-                //아래부분은 공통정보가 아님
-                residence = json.getString("residence");
-                job = json.getString("job");
-                hobby = json.getString("hobby");
-                contact = json.getString("contact");
-                photo = json.getString("photo");
-                editContact.setText(contact);
-                editResidence.setText(residence);
-                editJob.setText(job);
-                editHobby.setText(hobby);
+                String str = getMyRequest.execute(myUrl).get();
+                JSONObject myJsonObj = new JSONObject(str);
+                Gson gson = new GsonBuilder().create();
+                String jsons = myJsonObj.getString("member");
+                User user = gson.fromJson(jsons, User.class);
+                name = user.getName();
+                gender = user.getGender();
+                birthday = user.getDate_of_birth();
+                contact = user.getContact();
+                editContact.setText(user.getContact());
+                editResidence.setText(user.getResidence());
+                editJob.setText(user.getJob());
+                editHobby.setText(user.getHobby());
                 Uri uri = null;
                 ImageAdapter imageAdapter = new ImageAdapter(editPhoto.getContext(), uri);
                 //ImageView imageView = new ImageView(getContext());
@@ -144,7 +144,6 @@ public class ModifyActivity extends AppCompatActivity {
                 //requestBuilder = requestBuilder.apply(new RequestOptions().override(250, 250));
                 // Show image into target imageview.
                 requestBuilder.into(editPhoto);
-
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -186,7 +185,7 @@ public class ModifyActivity extends AppCompatActivity {
             }
         });
 
-        //완료버튼 클릭시
+        // 완료 버튼 클릭 시
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.modifyConfirm);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -197,26 +196,27 @@ public class ModifyActivity extends AppCompatActivity {
                     toast.show();
                     return;
                 }
-                //gender check, 생년월일 -> 나이
-                birthday = changeOrder(birthday);
                 String gender;
                 if (female.isChecked()){
                     gender = "female";
                 }else {
                     gender = "male";
                 }
-                ArrayList<String> key = new ArrayList<String>(Arrays.asList(
-                        "uId", "date_of_birth", "job", "gender", "contact", "residence","name","hobby"));
-                ArrayList<String> value = new ArrayList<String>(Arrays.asList(id, birthday, editJob.getText().toString(), gender,
-                        editContact.getText().toString(), editResidence.getText().toString(),
-                        editName.getText().toString(), editHobby.getText().toString()));
-                //데이터 유효성 검사 Photo부분, 신규인원이거나 사진변경을 했으면 확인해야함
+
+                User user = new User(null, editName.getText().toString(), gender,null,
+                        editResidence.getText().toString(), editContact.getText().toString(),
+                        editJob.getText().toString(), editHobby.getText().toString(),
+                        null, id, birthday);
+
+                //gender check, 생년월일 -> 나이
+                birthday = changeOrder(birthday);
+
+                //데이터 유효성 검사 Photo부분, 신규가입이거나 사진변경을 했으면 확인해야함
                 if (!isMember || isPhotoChange) {
                     try {
                         f = new File(path);
                         file_name = f.getName();
-                        key.add("photo");
-                        value.add(file_name);
+                        user.setPhoto(file_name);
                         Future uploading = Ion.with(ModifyActivity.this)
                                 .load("http://143.248.140.106:2980/upload")
                                 .setMultipartFile("image", f)
@@ -244,24 +244,16 @@ public class ModifyActivity extends AppCompatActivity {
 
                 // 여기가 데이터 보내는 부분. 아래있는 형식대로 데이터를 넘기면 된다.
                 try {
+                    Gson gson = new GsonBuilder().create();
+                    String str = gson.toJson(user);
+
                     //http에 넣을 수 있는 형식으로 만들기
                     //httprequestclass 로 보내서 실행시키기
                     if (isMember) {
-                        JSONArray linkerList = new JSONArray();
-                        for(int i=0; i<key.size(); i++) {
-                            JSONObject a = new JSONObject();
-                            a.put("propName", key.get(i));
-                            a.put("value", value.get(i));
-                            linkerList.put(a);
-                        }
-                        StringEntity json_string = new StringEntity(linkerList.toString());
-                        new HttpPatchRequest(json_string,id).execute();
+                        new HttpPatchRequest(str,id).execute();
                     }else{
-                        for(int i=0; i<key.size(); ++i){
-                            json.put(key.get(i),value.get(i));
-                        }
-                        StringEntity json_string = new StringEntity(json.toString());
-                        new HttpPostRequest(json_string).execute();
+                        Log.e("POST STRING", str);
+                        new HttpPostRequest(str).execute();
                     }
 
 
@@ -277,7 +269,6 @@ public class ModifyActivity extends AppCompatActivity {
                 Log.d("Residence!!!", editResidence.getText().toString());
                 Log.d("Job!!!", editJob.getText().toString());
                 Log.d("Hobby!!!", editHobby.getText().toString());
-
 
                 //다음 Activity로 이동
                 startActivity(new Intent(ModifyActivity.this, FragmentActivity.class));

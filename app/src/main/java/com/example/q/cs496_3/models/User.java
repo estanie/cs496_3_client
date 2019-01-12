@@ -11,6 +11,23 @@ public class User {
     private String hobby;
     private String photo;
     private String id;
+    private String date_of_birth;
+
+    public User() {}
+    public User(String image, String name, String gender, String age, String residence, String contact,
+         String job, String hobby, String photo, String id, String date_of_birth) {
+        this.image = image;
+        this.name = name;
+        this.gender = gender;
+        this.age = age;
+        this.residence = residence;
+        this.contact = contact;
+        this.job = job;
+        this.hobby = hobby;
+        this.photo = photo;
+        this.id = id;
+        this.date_of_birth = date_of_birth;
+    }
 
     //TODO : Image
 
@@ -27,8 +44,8 @@ public class User {
     public String getAge() { return age; }
     public void setAge(String age) { this.age = age; }
 
-    public String getResidence() { return age; }
-    public void setResidence(String age) { this.age = age; }
+    public String getResidence() { return residence; }
+    public void setResidence(String age) { this.residence= residence; }
 
     public String getHobby() { return hobby; }
     public void setHobby(String hobby) { this.hobby = hobby; }
@@ -44,4 +61,7 @@ public class User {
 
     public String getId() {return id;}
     public void setId(String id){this.id = id;}
+
+    public String getDate_of_birth() {return date_of_birth;}
+    public void setDate_of_birth(String date_of_birth) {this.date_of_birth = date_of_birth;}
 }

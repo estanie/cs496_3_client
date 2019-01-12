@@ -13,11 +13,9 @@ import cz.msebera.android.httpclient.impl.client.HttpClientBuilder;
 
 public class HttpPostRequest extends AsyncTask<String, Void, JsonArray> {
     HttpClient httpClient = HttpClientBuilder.create().build();
-    StringEntity mJsonString;
-
-    public HttpPostRequest(StringEntity json_string) {
-        mJsonString = json_string;
-        Log.d("Json input is",mJsonString.toString());
+    String str;
+    public HttpPostRequest(String str) {
+       this.str = str;
     }
 
 
@@ -25,9 +23,9 @@ public class HttpPostRequest extends AsyncTask<String, Void, JsonArray> {
         try {
             HttpPost request = new HttpPost("http://143.248.140.106:2580/members");
             //StringEntity params = new StringEntity(params);
-            request.addHeader("content-type","application/json");
-            request.addHeader("Accept","application/json");
-            request.setEntity(mJsonString);
+            request.addHeader("Content-Type","application/json;charset=UTF-8");
+            request.addHeader("Accept","application/json;charset=UTF-8");
+            request.setEntity(new StringEntity(str, "UTF-8"));
             Log.d("Request is ", request.toString());
             HttpResponse response = httpClient.execute(request);
         } catch (Exception e) {
