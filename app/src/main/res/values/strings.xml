@@ -10,10 +10,11 @@
     <string name="facebook_app_id">2002709003176778</string>
     <string name="fb_login_protocol_scheme">fb2002709003176778</string>
     <string name="face_not_found">당.당.하.게.얼.굴.공.개</string>
-    <string name="too_many_face">한 사람만 올려야댐</string>
+    <string name="too_many_face">내 얼굴만 올려주세요.</string>
     <string name="info_not_found">간절해야 이루어진다구!</string>
     <string name="choose_image">사진을 선택해주세요.</string>
     <string name="detector_not_avaliable">얼굴 감지를 사용할 수 없습니다.</string>
-
+    <string name="match_success">운명적 만남이 시작됐어요.</string>
+    <string name="match_waiting">기다림의 설렘을 느껴봐요!</string>
 
 </resources>
