@@ -16,5 +16,6 @@
     <string name="detector_not_avaliable">얼굴 감지를 사용할 수 없습니다.</string>
     <string name="match_success">운명적 만남이 시작됐어요.</string>
     <string name="match_waiting">기다림의 설렘을 느껴봐요!</string>
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
 
 </resources>
