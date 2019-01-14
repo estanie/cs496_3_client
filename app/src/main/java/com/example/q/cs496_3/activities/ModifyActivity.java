@@ -34,21 +34,18 @@ import com.example.q.cs496_3.adapters.ImageAdapter;
 import com.example.q.cs496_3.https.HttpGetRequest;
 import com.example.q.cs496_3.https.HttpPatchRequest;
 import com.example.q.cs496_3.https.HttpPostRequest;
+import com.example.q.cs496_3.https.HttpUploadRequest;
 import com.example.q.cs496_3.models.User;
 import com.facebook.Profile;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+import com.koushikdutta.ion.ProgressCallback;
 import com.koushikdutta.ion.Response;
 
 import org.json.JSONException;
@@ -58,7 +55,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -85,18 +81,6 @@ public class ModifyActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       /* FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
-        mUser.getIdToken(true)
-                .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<GetTokenResult> task) {
-                        if (task.isSuccessful()) {
-                            String idToken = task.getResult().getToken();
-                            Log.d(TAG, idToken);
-                        }
-                    }
-                });
-                */
         //맨위 TITEL_BAR 제거
         requestWindowFeature(Window.FEATURE_NO_TITLE);//will hide the title
         getSupportActionBar().hide();
@@ -108,14 +92,12 @@ public class ModifyActivity extends AppCompatActivity {
     public void loadOrRequestPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             doLoad();
-        }
-        else {
+        } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE);
         }
     }
 
-    public void doLoad()
-    {
+    public void doLoad() {
         setResult(RESULT_CANCELED);
         //layout과의 연결을 담당하는 부분
         editPhoto = (ImageView) findViewById(R.id.modifyImage);
@@ -126,22 +108,24 @@ public class ModifyActivity extends AppCompatActivity {
         final EditText editResidence = (EditText) findViewById(R.id.modifyResidence);
         final EditText editJob = (EditText) findViewById(R.id.modifyJob);
         final EditText editHobby = (EditText) findViewById(R.id.modifyHobby);
-        male = (RadioButton)findViewById(R.id.radioMale);
-        female = (RadioButton)findViewById(R.id.radioFemale);
+        male = (RadioButton) findViewById(R.id.radioMale);
+        female = (RadioButton) findViewById(R.id.radioFemale);
 
         //초기 로그인 : id, name, birthday, gender 받기
-        Intent intent=getIntent();
-        if (intent.getStringExtra("isMember")!=null){
+        Intent intent = getIntent();
+        if (intent.getStringExtra("isMember") != null) {
             isMember = true;
-        }else{ isMember = false;}
+        } else {
+            isMember = false;
+        }
 
         json = new JSONObject();
 
         //TODO 이미 회원인 경우 모든 데이터를 이전과 동일하게 채워넣는다.
-        if (isMember){
+        if (isMember) {
             HttpGetRequest getMyRequest = new HttpGetRequest();
             id = Profile.getCurrentProfile().getId();
-            String myUrl = "http://143.248.140.106:2580/members/"+id;
+            String myUrl = "http://143.248.140.106:2580/members/" + id;
             Log.e(TAG, "IS MEMBER");
             try {
                 String str = getMyRequest.execute(myUrl).get();
@@ -159,12 +143,13 @@ public class ModifyActivity extends AppCompatActivity {
                 editResidence.setText(user.getResidence());
                 editJob.setText(user.getJob());
                 editHobby.setText(user.getHobby());
-                Uri uri = null;
-                ImageAdapter imageAdapter = new ImageAdapter(editPhoto.getContext(), uri);
+                photo = user.getPhoto();
+                ImageAdapter imageAdapter = new ImageAdapter(editPhoto.getContext(), null);
                 //ImageView imageView = new ImageView(getContext());
                 RequestManager requestManager = Glide.with(imageAdapter.getContext());
                 // Create request builder and load image.
-                RequestBuilder requestBuilder = requestManager.load("http://143.248.140.106:2980/uploads/"+photo);
+                Log.e(TAG, photo);
+                RequestBuilder requestBuilder = requestManager.load("http://143.248.140.106:2580/uploads/" + photo);
                 //requestBuilder = requestBuilder.apply(new RequestOptions().override(250, 250));
                 // Show image into target imageview.
                 requestBuilder.into(editPhoto);
@@ -176,11 +161,10 @@ public class ModifyActivity extends AppCompatActivity {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }else{//TODO 이미 회원이 아닌 경우 indent에서 데이터를 가져와서 채워넣는다.
+        } else {//TODO 이미 회원이 아닌 경우 indent에서 데이터를 가져와서 채워넣는다.
             id = intent.getStringExtra("id");
             name = intent.getStringExtra("name");
             birthday = intent.getStringExtra("birthday");//생년월일 순서 정렬
-            birthday = changeOrder(birthday);
             gender = intent.getStringExtra("gender");
         }
 
@@ -197,7 +181,7 @@ public class ModifyActivity extends AppCompatActivity {
 
         //이미지 버튼 클릭시
         // TODO(estanie): 직접 사진 찍어 올리는 기능도 있으면 좋겠다.
-        editPhoto.setOnClickListener(new View.OnClickListener(){
+        editPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //TODO PHOTO SELECT 화면으로 넘어가는 기능
@@ -215,51 +199,34 @@ public class ModifyActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //데이터 유효성 검사 Text부분
-                if(notAllWritten()){
+                if (notAllWritten()) {
                     Toast toast = Toast.makeText(
                             getApplicationContext(), R.string.info_not_found, Toast.LENGTH_SHORT);
                     toast.show();
                     return;
                 }
                 String gender;
-                if (female.isChecked()){
+                if (female.isChecked()) {
                     gender = "female";
-                }else {
+                } else {
                     gender = "male";
                 }
 
                 // TODO(estanie): 기존 유저이면서 다른 핸드폰으로 가면 수정하기 전까지는 전 핸드폰에 알람감.
                 String token = FirebaseInstanceId.getInstance().getToken();
-                Log.e(TAG, token);
-                User user = new User(null, editName.getText().toString(), gender,null,
+                photo = new File(path).getName();
+                User user = new User(null, editName.getText().toString(), gender, null,
                         editResidence.getText().toString(), editContact.getText().toString(),
                         editJob.getText().toString(), editHobby.getText().toString(),
-                        null, id, birthday, 0 , token);
+                        photo, id, birthday, 0, token);
+
+                // 생년월일 -> 나이
+                birthday = changeOrder(birthday);
 
                 //데이터 유효성 검사 Photo부분, 신규가입이거나 사진변경을 했으면 확인해야함
                 if (!isMember || isPhotoChange) {
                     try {
-                        f = new File(path);
-                        file_name = f.getName();
-                        user.setPhoto(file_name);
-                        Future uploading = Ion.with(ModifyActivity.this)
-                                .load("http://143.248.140.106:2980/upload")
-                                .setMultipartFile("image", f)
-                                .asString()
-                                .withResponse()
-                                .setCallback(new FutureCallback<Response<String>>() {
-                                    @Override
-                                    public void onCompleted(Exception e, Response<String> result) {
-                                        try {
-                                            JSONObject jobj = new JSONObject(result.getResult());
-                                            Toast.makeText(getApplicationContext(), jobj.getString("response"), Toast.LENGTH_SHORT).show();
-
-                                        } catch (JSONException e1) {
-                                            e1.printStackTrace();
-                                        }
-
-                                    }
-                                });
+                        new HttpUploadRequest(path, getApplicationContext()).execute();
                     } catch (NullPointerException e) {
                         Toast toast = Toast.makeText(getApplicationContext(),
                                 R.string.face_not_found, Toast.LENGTH_SHORT);
@@ -272,13 +239,12 @@ public class ModifyActivity extends AppCompatActivity {
                 try {
                     Gson gson = new GsonBuilder().create();
                     String str = gson.toJson(user);
-
+                    Log.e(TAG, "String: " + str);
                     //http에 넣을 수 있는 형식으로 만들기
                     //httprequestclass 로 보내서 실행시키기
                     if (isMember) {
-                        new HttpPatchRequest(str,id).execute();
-                    }else{
-                        Log.e(TAG, str);
+                        new HttpPatchRequest(str, id).execute();
+                    } else {
                         new HttpPostRequest(str).execute();
                     }
 
@@ -311,17 +277,12 @@ public class ModifyActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults)
-    {
-        switch(requestCode)
-        {
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
             case REQUEST_CODE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     doLoad();
-                }
-                else
-                {
+                } else {
                     Toast.makeText(this, "Need to allow access!", Toast.LENGTH_SHORT).show();
                     loadOrRequestPermission();
                 }
@@ -329,7 +290,7 @@ public class ModifyActivity extends AppCompatActivity {
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.e(TAG, "IMAGE DATA"+data);
+        Log.e(TAG, "IMAGE DATA" + data);
         if (data == null)
             return;
         switch (requestCode) {
@@ -344,6 +305,7 @@ public class ModifyActivity extends AppCompatActivity {
                                 .load(data.getData())
                                 .into(editPhoto);
                         //upload.setVisibility(View.VISIBLE);
+
                         isPhotoChange = true;
                     }
                 }
@@ -353,8 +315,8 @@ public class ModifyActivity extends AppCompatActivity {
     public String getRealPathFromURI(Context context, Uri contentUri) {
         Cursor cursor = null;
         try {
-            String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+            String[] proj = {MediaStore.Images.Media.DATA};
+            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
             return cursor.getString(column_index);
@@ -364,10 +326,11 @@ public class ModifyActivity extends AppCompatActivity {
             }
         }
     }
+
     @NonNull
     private String changeOrder(String birthday) {
         String[] date = birthday.split("/");
-        return date[2]+"/"+date[0]+"/"+date[1];
+        return date[2] + "/" + date[0] + "/" + date[1];
     }
 
     private Boolean checkIsFace(Uri uri) {
@@ -375,14 +338,14 @@ public class ModifyActivity extends AppCompatActivity {
         InputStream inputStream;
         try {
             inputStream = getBaseContext().getContentResolver().openInputStream(uri);
-        } catch(FileNotFoundException ex) {
+        } catch (FileNotFoundException ex) {
             ex.printStackTrace();
             return false;
         }
         Bitmap myBitmap = null;
         try {
             myBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-        } catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         FaceDetector faceDetector = new FaceDetector.Builder(getApplicationContext()).setTrackingEnabled(false).build();

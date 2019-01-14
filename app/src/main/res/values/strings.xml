@@ -13,7 +13,7 @@
     <string name="too_many_face">내 얼굴만 올려주세요.</string>
     <string name="info_not_found">간절해야 이루어진다구!</string>
     <string name="choose_image">사진을 선택해주세요.</string>
-    <string name="detector_not_avaliable">얼굴 감지를 사용할 수 없습니다.</string>
+    <string name="detector_not_avaliable">다시 시도해주세요.</string>
     <string name="match_success">운명적 만남이 시작됐어요.</string>
     <string name="match_waiting">기다림의 설렘을 느껴봐요!</string>
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>

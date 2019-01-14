@@ -14,6 +14,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.example.q.cs496_3.R;
+import com.example.q.cs496_3.animations.ResizeAnimation;
 import com.example.q.cs496_3.models.Image;
 
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class SelectPictureAdapter extends RecyclerView.Adapter<SelectPictureAdap
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SelectPictureAdapter.ViewHolder holder, final int i) {
+    public void onBindViewHolder(@NonNull final SelectPictureAdapter.ViewHolder holder, final int i) {
         changeHeight(holder);
         Glide.with(mContext)
                 .load(imageData.get(i).getPath())
@@ -55,6 +56,10 @@ public class SelectPictureAdapter extends RecyclerView.Adapter<SelectPictureAdap
             @Override
             public void onClick(View v) {
                 imageData.get(i).toggle();
+                ResizeAnimation resizeAnimation = new ResizeAnimation(
+                        holder.selectImage, imageData.get(i).isSelected());
+                resizeAnimation.setDuration(500);
+                holder.selectImage.startAnimation(resizeAnimation);
                 Log.e(TAG, "Clicked " + i);
             }
         });

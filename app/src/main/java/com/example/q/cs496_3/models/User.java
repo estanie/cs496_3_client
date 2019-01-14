@@ -10,7 +10,7 @@ public class User {
     private String job;
     private String hobby;
     private String photo;
-    private String id;
+    private String uId;
     private String date_of_birth;
     private int like_me;
     private String token;
@@ -18,7 +18,7 @@ public class User {
 
     public User() {}
     public User(String image, String name, String gender, String age, String residence, String contact,
-         String job, String hobby, String photo, String id, String date_of_birth, int like_me, String token) {
+         String job, String hobby, String photo, String uId, String date_of_birth, int like_me, String token) {
         this.image = image;
         this.name = name;
         this.gender = gender;
@@ -28,7 +28,7 @@ public class User {
         this.job = job;
         this.hobby = hobby;
         this.photo = photo;
-        this.id = id;
+        this.uId = uId;
         this.date_of_birth = date_of_birth;
         this.like_me = like_me;
         this.token = token;
@@ -64,8 +64,8 @@ public class User {
     public String getPhoto() {return photo;}
     public void setPhoto(String photo) {this.photo = photo;}
 
-    public String getId() {return id;}
-    public void setId(String id){this.id = id;}
+    public String getUId() {return uId;}
+    public void setUId(String uId){this.uId = uId;}
 
     public String getDate_of_birth() {return date_of_birth;}
     public void setDate_of_birth(String date_of_birth) {this.date_of_birth = date_of_birth;}

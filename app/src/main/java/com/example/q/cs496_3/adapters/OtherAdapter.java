@@ -87,12 +87,12 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
         //ImageView imageView = new ImageView(getContext());
         RequestManager requestManager = Glide.with(imageAdapter.getContext());
         // Create request builder and load image.
-        RequestBuilder requestBuilder = requestManager.load("http://143.248.140.106:2980/uploads/"+userData.get(i).getPhoto());
+        RequestBuilder requestBuilder = requestManager.load("http://143.248.140.106:2580/uploads/"+userData.get(i).getPhoto());
         //requestBuilder = requestBuilder.apply(new RequestOptions().override(250, 250));
         // Show image into target imageview.
         Log.d("PHOTOPHOTO",userData.get(i).getPhoto()==null?"1":"WOOOW");
         requestBuilder.into(holder.viewPhoto);
-        final String takerId = userData.get(i).getId();
+        final String takerId = userData.get(i).getUId();
         final String myId = Profile.getCurrentProfile().getId();
         holder.viewPhoto.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         holder.viewName.setText(userData.get(i).getName());
