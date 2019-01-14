@@ -75,6 +75,7 @@ public class ModifyActivity extends AppCompatActivity {
     private RadioButton male, female;
     private boolean isMember;
     private boolean isPhotoChange = false;
+    private boolean isUserStyleSelected = false;
     private String photo;
     public String path;
     public File f;
@@ -136,17 +137,20 @@ public class ModifyActivity extends AppCompatActivity {
 
         json = new JSONObject();
 
-
         //TODO 이미 회원인 경우 모든 데이터를 이전과 동일하게 채워넣는다.
         if (isMember){
             HttpGetRequest getMyRequest = new HttpGetRequest();
             id = Profile.getCurrentProfile().getId();
             String myUrl = "http://143.248.140.106:2580/members/"+id;
+            Log.e(TAG, "IS MEMBER");
             try {
                 String str = getMyRequest.execute(myUrl).get();
                 JSONObject myJsonObj = new JSONObject(str);
                 Gson gson = new GsonBuilder().create();
                 String jsons = myJsonObj.getString("member");
+                if (!myJsonObj.getJSONObject("member").getJSONArray("style").toString().equals("[]")) {
+                    isUserStyleSelected = true;
+                }
                 User user = gson.fromJson(jsons, User.class);
                 name = user.getName();
                 gender = user.getGender();
@@ -285,17 +289,9 @@ public class ModifyActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                Log.d("ID!!!", id);
-                Log.d("Name!!!", editName.getText().toString());
-                Log.d("Gender!!!", gender);
-                Log.d("Age!!!", editBirthday.getText().toString());
-                Log.d("Contact!!!", editContact.getText().toString());
-                Log.d("Residence!!!", editResidence.getText().toString());
-                Log.d("Job!!!", editJob.getText().toString());
-                Log.d("Hobby!!!", editHobby.getText().toString());
 
                 // 원래 멤버일 경우 이전 페이지로 이동. 아닌 경우, 마음에 드는 얼굴 찾는 페이지로 이동.
-                if (isMember) {
+                if (isMember && isUserStyleSelected) {
                     startActivity(new Intent(
                             ModifyActivity.this, FragmentActivity.class));
                 } else {

@@ -194,24 +194,18 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                     List<JSONObject> my_linkerList = new ArrayList<>(); // 대괄호 역할
                     List<JSONObject> your_linkerList = new ArrayList<>(); // 대괄호 역할
                     // 나와 상대방 success에 서로의 uId 추가
-                    JSONObject json_my_success = new JSONObject(); // 중괄호 역할
-                    JSONObject json_your_success = new JSONObject(); // 중괄호 역할
+                    JSONObject myJson = new JSONObject(); // 중괄호 역할
+                    JSONObject yourJson = new JSONObject(); // 중괄호 역할
                     my_success.put(takerId);
                     Log.d("takerId", takerId);
                     your_success.put(myId);
                     Log.d("myId", takerId);
                     try {
-                        json_my_success.put("success", my_success);
-                        json_your_success.put("success", your_success);
+                        myJson.put("success", my_success);
+                        yourJson.put("success", your_success);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-                    my_linkerList.add(json_my_success);
-                    your_linkerList.add(json_your_success);
-
-                    JSONObject json_my_received = new JSONObject();
-                    JSONObject json_your_gave = new JSONObject();
 
                     // 나의 received에서 상대 uId 제거
                     JSONArray new_my_received = new JSONArray();
@@ -237,15 +231,15 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                     }
 
                     try {
-                        json_my_received.put("received", new_my_received);
-                        json_your_gave.put("gave", new_your_gave);
+                        myJson.put("received", new_my_received);
+                        yourJson.put("gave", new_your_gave);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
                     //httprequestclass 로 보내서 실행시키기
-                    new HttpPatchRequest(json_my_received.toString(), myId).execute();
-                    new HttpPatchRequest(json_your_gave.toString(), takerId).execute();
+                    new HttpPatchRequest(myJson.toString(), myId).execute();
+                    new HttpPatchRequest(yourJson.toString(), takerId).execute();
                     Log.e(TAG, "Push Request!");
                     new HttpPushRequest(myId, takerId).execute();
                 } else { // match 실패
@@ -267,8 +261,6 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                     }
                     //내 gave에 하트 받는 사람 id 넣기
                     JSONObject json_2 = new JSONObject();
-                    List<JSONObject> linkerList_2 = new ArrayList<>();
-                    JsonParser jsonParser = new JsonParser();
                     my_gave.put(takerId);
                     try {
                         json_2.put("gave", my_gave);
@@ -286,7 +278,6 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
 
                 //하트 아이콘 바꾸기
                 holder.heartButton.setImageResource(R.drawable.chan_heart_image);
-
                 return false;
             }
         });

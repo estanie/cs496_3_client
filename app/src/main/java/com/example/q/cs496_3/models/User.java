@@ -13,6 +13,7 @@ public class User {
     private String id;
     private String date_of_birth;
     private String token;
+    private Boolean likeMe = false;
 
     public User() {}
     public User(String image, String name, String gender, String age, String residence, String contact,
@@ -69,4 +70,5 @@ public class User {
 
     public String getToken() {return token;}
     public void setToken(String token) {this.token = token;}
+
 }

@@ -101,6 +101,7 @@ public class OtherFragment extends Fragment {
                         residence = m.getString("residence");
                         job = m.getString("job");
                         hobby = m.getString("hobby");
+
                         User user1 = new User();
                         user1.setName(name);
                         user1.setAge("" + age);

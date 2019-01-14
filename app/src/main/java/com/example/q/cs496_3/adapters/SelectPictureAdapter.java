@@ -14,16 +14,17 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.example.q.cs496_3.R;
+import com.example.q.cs496_3.models.Image;
 
 import java.util.ArrayList;
 
 public class SelectPictureAdapter extends RecyclerView.Adapter<SelectPictureAdapter.ViewHolder> {
     private final String TAG = "SELECT_PICTURE_ADAPTER";
     // TODO(estanie): Image 어떤식으로 받을지 고민...
-    private ArrayList<String> imageData;
+    private ArrayList<Image> imageData;
     private Context mContext;
 
-    public SelectPictureAdapter(Context context, ArrayList<String> imageData) {
+    public SelectPictureAdapter(Context context, ArrayList<Image> imageData) {
         this.imageData = imageData;
         this.mContext = context;
     }
@@ -45,13 +46,19 @@ public class SelectPictureAdapter extends RecyclerView.Adapter<SelectPictureAdap
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SelectPictureAdapter.ViewHolder holder, int i) {
-        Log.e(TAG, imageData.get(i));
+    public void onBindViewHolder(@NonNull SelectPictureAdapter.ViewHolder holder, final int i) {
         changeHeight(holder);
         Glide.with(mContext)
-                .load(imageData.get(i))
+                .load(imageData.get(i).getPath())
                 .into(holder.selectImage);
+        holder.selectImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imageData.get(i).toggle();
+                Log.e(TAG, "Clicked " + i);
 
+            }
+        });
         // TODO(estanie): 사진 다중 선택기능 추가.
     }
 
