@@ -35,6 +35,7 @@ import java.util.concurrent.ExecutionException;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class InformationFragment extends Fragment implements View.OnClickListener {
+    private final String TAG = "InformationFragment";
     Animation fab_open, fab_close;
     Boolean isFabOpen = false;
     FloatingActionButton fab, fab1, fab2;
@@ -115,13 +116,12 @@ public class InformationFragment extends Fragment implements View.OnClickListene
         viewImage.setImageResource("이미지 위치찾기");
         */
 
-
-        Uri uri = null;
-        ImageAdapter imageAdapter = new ImageAdapter(getContext(), uri);
+        ImageAdapter imageAdapter = new ImageAdapter(getContext(), null);
         //ImageView imageView = new ImageView(getContext());
         RequestManager requestManager = Glide.with(imageAdapter.getContext());
         // Create request builder and load image.
-        RequestBuilder requestBuilder = requestManager.load("http://143.248.140.106:2980/uploads/"+photo);
+        Log.e(TAG, "http://143.248.140.106:2580/uploads/"+photo);
+        RequestBuilder requestBuilder = requestManager.load("http://143.248.140.106:2580/uploads/"+photo);
         //requestBuilder = requestBuilder.apply(new RequestOptions().override(250, 250));
         // Show image into target imageview.
         requestBuilder.into(viewImage);

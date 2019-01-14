@@ -45,6 +45,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services:12.0.1'
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.google.firebase:firebase-core:16.0.1'
+    implementation 'com.android.volley:volley:1.1.0'
     implementation 'com.google.firebase:firebase-messaging:17.3.1'
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation('com.facebook.android:audience-network-sdk:4.28.0', {

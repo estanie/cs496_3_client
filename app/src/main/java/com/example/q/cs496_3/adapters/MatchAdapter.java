@@ -63,7 +63,7 @@ public class MatchAdapter extends RecyclerView.Adapter<MatchAdapter.viewHolder> 
         //ImageView imageView = new ImageView(getContext());
         RequestManager requestManager = Glide.with(imageAdapter.getContext());
         // Create request builder and load image.
-        RequestBuilder requestBuilder = requestManager.load("http://143.248.140.106:2980/uploads/"+userData.get(i).getPhoto());
+        RequestBuilder requestBuilder = requestManager.load("http://143.248.140.106:2580/uploads/"+userData.get(i).getPhoto());
         //requestBuilder = requestBuilder.apply(new RequestOptions().override(250, 250));
         // Show image into target imageview.
         requestBuilder.into(holder.viewPhoto);

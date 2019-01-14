@@ -21,6 +21,6 @@ public class Image {
     }
 
     public boolean isSelected() {
-        return isSelected();
+        return isSelected;
     }
 }

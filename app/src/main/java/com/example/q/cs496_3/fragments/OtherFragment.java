@@ -98,7 +98,7 @@ public class OtherFragment extends Fragment {
                 user1.setHobby(hobby);
                 user1.setJob(job);
                 user1.setPhoto(photo);
-                user1.setId(giverId);
+                user1.setUId(giverId);
                 Log.d("like_me","hahaha");
                 user1.setLike_me(1);
                 userData.add(user1);
@@ -154,7 +154,7 @@ public class OtherFragment extends Fragment {
                         user1.setHobby(hobby);
                         user1.setJob(job);
                         user1.setPhoto(photo);
-                        user1.setId(id);
+                        user1.setUId(id);
                         userData.add(user1);
                     }
                     else {
