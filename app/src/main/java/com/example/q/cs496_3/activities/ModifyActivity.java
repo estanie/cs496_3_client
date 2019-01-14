@@ -37,9 +37,14 @@ import com.example.q.cs496_3.https.HttpPostRequest;
 import com.example.q.cs496_3.https.HttpUploadRequest;
 import com.example.q.cs496_3.models.User;
 import com.facebook.Profile;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -219,10 +224,7 @@ public class ModifyActivity extends AppCompatActivity {
                 User user = new User(null, editName.getText().toString(), gender, null,
                         editResidence.getText().toString(), editContact.getText().toString(),
                         editJob.getText().toString(), editHobby.getText().toString(),
-                        photo, id, birthday, 0, token, 0);
-
-                // 생년월일 -> 나이
-                birthday = changeOrder(birthday);
+                        photo, id, birthday, 0 , token, 0);
 
                 //데이터 유효성 검사 Photo부분, 신규가입이거나 사진변경을 했으면 확인해야함
                 if (!isMember || isPhotoChange) {
