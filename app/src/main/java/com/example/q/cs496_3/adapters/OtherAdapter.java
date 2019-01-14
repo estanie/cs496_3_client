@@ -118,9 +118,11 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                 JSONArray my_gave = new JSONArray();
                 JSONArray my_received = new JSONArray();
                 JSONArray my_success = new JSONArray();
+                JSONArray my_style = new JSONArray();
 
                 //내 gaved, received, success 받아오기
                 //Instantiate new instance of our class GET
+
                 HttpGetRequest getMyRequest = new HttpGetRequest();
                 try {
                     get_my_result = getMyRequest.execute(myUrl).get();
@@ -132,6 +134,7 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                         my_gave = member.getJSONArray("gave");
                         my_received = member.getJSONArray("received");
                         my_success = member.getJSONArray("success");
+                        my_style = member.getJSONArray("style");
                         Log.d("gave", my_gave.toString());
                     }
                 } catch (ExecutionException e) {
@@ -150,6 +153,7 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                 JSONArray your_received = new JSONArray();
                 JSONArray your_gave = new JSONArray();
                 JSONArray your_success = new JSONArray();
+                String your_photo = "";
                 //Instantiate new instance of our class GET
                 HttpGetRequest getYourRequest = new HttpGetRequest();
                 //상대의 received, gave, sucess 받아오기
@@ -162,6 +166,7 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                         your_received = member.getJSONArray("received");
                         your_gave = member.getJSONArray("gave");
                         your_success = member.getJSONArray("success");
+                        your_photo = member.getString("photo");
                     }
                 } catch (ExecutionException e) {
                     Log.e("error", "haha");
@@ -173,113 +178,118 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                     e.printStackTrace();
                 }
 
-
-                JSONObject json = new JSONObject();
-                boolean matched = false;
-                for (int i = 0; i < my_received.length(); ++i) {
-                    try {
-                        // matching 성공 시
-                        if (my_received.getString(i).equals(takerId)) {
-                            matched = true;
-                            break;
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                // matching 성공 시
-                if (matched) {
-                    Toast toast = Toast.makeText(getApplicationContext(),
-                            R.string.match_success, Toast.LENGTH_SHORT);
-                    toast.show();
-                    Gson gson = new GsonBuilder().create();
-
-                    // 나와 상대방 success에 서로의 uId 추가
-                    JSONObject myJson = new JSONObject(); // 중괄호 역할
-                    JSONObject yourJson = new JSONObject(); // 중괄호 역할
-                    my_success.put(takerId);
-                    Log.d("takerId", takerId);
-                    your_success.put(myId);
-                    Log.d("myId", takerId);
-                    try {
-                        myJson.put("success", my_success);
-                        yourJson.put("success", your_success);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    // 나의 received에서 상대 uId 제거
-                    JSONArray new_my_received = new JSONArray();
-                    for (int j = 0; j < my_received.length(); ++j) {
+                if (userData.get(i).getStyle() == 1) {
+                    my_style.put(your_photo);
+                    new HttpPatchRequest(my_style.toString(), myId).execute();
+                } else {
+                    JSONObject json = new JSONObject();
+                    boolean matched = false;
+                    for (int i = 0; i < my_received.length(); ++i) {
                         try {
-                            if (!my_received.getString(j).equals(takerId)) {
-                                new_my_received.put(my_received.getString(j));
+                            // matching 성공 시
+                            if (my_received.getString(i).equals(takerId)) {
+                                matched = true;
+                                break;
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
 
-                    // 상대의 gave에서 나의 uId 제거
-                    JSONArray new_your_gave = new JSONArray();
-                    for (int j = 0; j < your_gave.length(); ++j) {
+                    // matching 성공 시
+                    if (matched) {
+                        Toast toast = Toast.makeText(getApplicationContext(),
+                                R.string.match_success, Toast.LENGTH_SHORT);
+                        toast.show();
+                        Gson gson = new GsonBuilder().create();
+
+                        // 나와 상대방 success에 서로의 uId 추가
+                        JSONObject myJson = new JSONObject(); // 중괄호 역할
+                        JSONObject yourJson = new JSONObject(); // 중괄호 역할
+                        my_success.put(takerId);
+                        Log.d("takerId", takerId);
+                        your_success.put(myId);
+                        Log.d("myId", takerId);
                         try {
-                            if (!your_gave.getString(j).equals(myId)) {
-                                new_your_gave.put(your_gave.getString(j));
-                            }
+                            myJson.put("success", my_success);
+                            yourJson.put("success", your_success);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                    }
 
-                    try {
-                        myJson.put("received", new_my_received);
-                        yourJson.put("gave", new_your_gave);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                        // 나의 received에서 상대 uId 제거
+                        JSONArray new_my_received = new JSONArray();
+                        for (int j = 0; j < my_received.length(); ++j) {
+                            try {
+                                if (!my_received.getString(j).equals(takerId)) {
+                                    new_my_received.put(my_received.getString(j));
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
 
-                    //httprequestclass 로 보내서 실행시키기
-                    Log.e(TAG, "My : " + myJson.toString() + myId);
-                    Log.e(TAG, "Your: " + yourJson.toString() + takerId);
-                    new HttpPatchRequest(myJson.toString(), myId).execute();
-                    new HttpPatchRequest(yourJson.toString(), takerId).execute();
-                    Log.e(TAG, "Push Request!");
-                    new HttpPushRequest(myId, takerId).execute();
-                } else { // match 실패
-                    Toast toast = Toast.makeText(getApplicationContext(), R.string.match_waiting, Toast.LENGTH_SHORT);
-                    toast.show();
-                    try {
-                        //하트 받는 사람의 received 에 내 id 넣기
-                        your_received.put(myId);
-                        json.put("received", your_received);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    try {
+                        // 상대의 gave에서 나의 uId 제거
+                        JSONArray new_your_gave = new JSONArray();
+                        for (int j = 0; j < your_gave.length(); ++j) {
+                            try {
+                                if (!your_gave.getString(j).equals(myId)) {
+                                    new_your_gave.put(your_gave.getString(j));
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        try {
+                            myJson.put("received", new_my_received);
+                            yourJson.put("gave", new_your_gave);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
                         //httprequestclass 로 보내서 실행시키기
-                        new HttpPatchRequest(json.toString(), takerId).execute();
+                        Log.e(TAG, "My : " + myJson.toString() + myId);
+                        Log.e(TAG, "Your: " + yourJson.toString() + takerId);
+                        new HttpPatchRequest(myJson.toString(), myId).execute();
+                        new HttpPatchRequest(yourJson.toString(), takerId).execute();
+                        Log.e(TAG, "Push Request!");
+                        new HttpPushRequest(myId, takerId).execute();
+                    } else { // match 실패
+                        Toast toast = Toast.makeText(getApplicationContext(), R.string.match_waiting, Toast.LENGTH_SHORT);
+                        toast.show();
+                        try {
+                            //하트 받는 사람의 received 에 내 id 넣기
+                            your_received.put(myId);
+                            json.put("received", your_received);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            //httprequestclass 로 보내서 실행시키기
+                            new HttpPatchRequest(json.toString(), takerId).execute();
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    //내 gave에 하트 받는 사람 id 넣기
-                    JSONObject json_2 = new JSONObject();
-                    my_gave.put(takerId);
-                    try {
-                        json_2.put("gave", my_gave);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        //httprequestclass 로 보내서 실행시키기
-                        new HttpPatchRequest(json_2.toString(), myId).execute();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        //내 gave에 하트 받는 사람 id 넣기
+                        JSONObject json_2 = new JSONObject();
+                        my_gave.put(takerId);
+                        try {
+                            json_2.put("gave", my_gave);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            //httprequestclass 로 보내서 실행시키기
+                            new HttpPatchRequest(json_2.toString(), myId).execute();
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
+
                 //하트 아이콘 바꾸기
                 holder.heartButton.setImageResource(R.drawable.red_heart);
                 return false;

@@ -234,7 +234,7 @@ public class ModifyActivity extends AppCompatActivity {
                 User user = new User(null, editName.getText().toString(), gender,null,
                         editResidence.getText().toString(), editContact.getText().toString(),
                         editJob.getText().toString(), editHobby.getText().toString(),
-                        null, id, birthday, 0 , token);
+                        null, id, birthday, 0 , token, 0);
 
                 //데이터 유효성 검사 Photo부분, 신규가입이거나 사진변경을 했으면 확인해야함
                 if (!isMember || isPhotoChange) {
@@ -294,7 +294,9 @@ public class ModifyActivity extends AppCompatActivity {
                             ModifyActivity.this, FragmentActivity.class));
                 } else {
                     startActivity(new Intent(
-                            ModifyActivity.this, SelectPictureActivity.class));
+                            ModifyActivity.this, StyleActivity.class));
+                    //startActivity(new Intent(
+                            //ModifyActivity.this, SelectPictureActivity.class));
                 }
                 setResult(RESULT_OK);
                 finish();
