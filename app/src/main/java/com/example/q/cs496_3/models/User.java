@@ -12,10 +12,11 @@ public class User {
     private String photo;
     private String id;
     private String date_of_birth;
+    private String token;
 
     public User() {}
     public User(String image, String name, String gender, String age, String residence, String contact,
-         String job, String hobby, String photo, String id, String date_of_birth) {
+         String job, String hobby, String photo, String id, String date_of_birth, String token) {
         this.image = image;
         this.name = name;
         this.gender = gender;
@@ -27,6 +28,7 @@ public class User {
         this.photo = photo;
         this.id = id;
         this.date_of_birth = date_of_birth;
+        this.token = token;
     }
 
     //TODO : Image
@@ -64,4 +66,7 @@ public class User {
 
     public String getDate_of_birth() {return date_of_birth;}
     public void setDate_of_birth(String date_of_birth) {this.date_of_birth = date_of_birth;}
+
+    public String getToken() {return token;}
+    public void setToken(String token) {this.token = token;}
 }

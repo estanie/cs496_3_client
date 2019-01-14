@@ -36,9 +36,15 @@ import com.example.q.cs496_3.https.HttpPatchRequest;
 import com.example.q.cs496_3.https.HttpPostRequest;
 import com.example.q.cs496_3.models.User;
 import com.facebook.Profile;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.koushikdutta.async.future.FutureCallback;
@@ -61,7 +67,7 @@ import info.hoang8f.android.segmented.SegmentedGroup;
 public class ModifyActivity extends AppCompatActivity {
     public final int IMAGE_PICK = 100;
     public final int REQUEST_CODE = 1;
-    public final String TAG = "MODIFY_ACTIVITY";
+    public final String TAG = "ModifyActivity";
     private String id;
     private String name;
     private String gender;
@@ -78,7 +84,18 @@ public class ModifyActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+       /* FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+        mUser.getIdToken(true)
+                .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<GetTokenResult> task) {
+                        if (task.isSuccessful()) {
+                            String idToken = task.getResult().getToken();
+                            Log.d(TAG, idToken);
+                        }
+                    }
+                });
+                */
         //맨위 TITEL_BAR 제거
         requestWindowFeature(Window.FEATURE_NO_TITLE);//will hide the title
         getSupportActionBar().hide();
@@ -206,10 +223,13 @@ public class ModifyActivity extends AppCompatActivity {
                     gender = "male";
                 }
 
+                // TODO(estanie): 기존 유저이면서 다른 핸드폰으로 가면 수정하기 전까지는 전 핸드폰에 알람감.
+                String token = FirebaseInstanceId.getInstance().getToken();
+                Log.e(TAG, token);
                 User user = new User(null, editName.getText().toString(), gender,null,
                         editResidence.getText().toString(), editContact.getText().toString(),
                         editJob.getText().toString(), editHobby.getText().toString(),
-                        null, id, birthday);
+                        null, id, birthday, token);
 
                 //gender check, 생년월일 -> 나이
                 birthday = changeOrder(birthday);

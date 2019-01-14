@@ -19,6 +19,7 @@ import com.bumptech.glide.RequestManager;
 import com.example.q.cs496_3.R;
 import com.example.q.cs496_3.https.HttpGetRequest;
 import com.example.q.cs496_3.https.HttpPatchRequest;
+import com.example.q.cs496_3.https.HttpPushRequest;
 import com.example.q.cs496_3.models.User;
 import com.facebook.Profile;
 import com.google.gson.Gson;
@@ -244,8 +245,9 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
 
                     //httprequestclass 로 보내서 실행시키기
                     new HttpPatchRequest(json_my_received.toString(), myId).execute();
-
                     new HttpPatchRequest(json_your_gave.toString(), takerId).execute();
+                    Log.e(TAG, "Push Request!");
+                    new HttpPushRequest(myId, takerId).execute();
                 } else { // match 실패
                     Toast toast = Toast.makeText(getApplicationContext(), R.string.match_waiting, Toast.LENGTH_SHORT);
                     toast.show();
