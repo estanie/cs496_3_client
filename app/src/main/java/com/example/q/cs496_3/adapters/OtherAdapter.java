@@ -41,7 +41,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> {
     private ArrayList<User> userData;
-    private final String TAG = "OTHER_ADAPTER";
+    private final String TAG = "OtherAdapter";
 
     public OtherAdapter(ArrayList<User> data){
         userData = data;
@@ -66,10 +66,7 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
             viewJob = itemView.findViewById(R.id.oEntryJob);
             viewHobby =itemView.findViewById(R.id.oEntryHobby);
             heartButton = itemView.findViewById(R.id.heartSignalButton);
-
         }
-
-
     }
     
     @NonNull
@@ -178,7 +175,6 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
 
 
                 JSONObject json = new JSONObject();
-                List<JSONObject> linkerList = new ArrayList<>();
                 boolean matched = false;
                 for (int i = 0; i < my_received.length(); ++i) {
                     try {
@@ -198,9 +194,6 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                             R.string.match_success, Toast.LENGTH_SHORT);
                     toast.show();
                     Gson gson = new GsonBuilder().create();
-
-                    List<JSONObject> my_linkerList = new ArrayList<>(); // 대괄호 역할
-                    List<JSONObject> your_linkerList = new ArrayList<>(); // 대괄호 역할
 
                     // 나와 상대방 success에 서로의 uId 추가
                     JSONObject myJson = new JSONObject(); // 중괄호 역할
@@ -248,6 +241,8 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                     }
 
                     //httprequestclass 로 보내서 실행시키기
+                    Log.e(TAG, "My : " + myJson.toString() + myId);
+                    Log.e(TAG, "Your: " + yourJson.toString() + takerId);
                     new HttpPatchRequest(myJson.toString(), myId).execute();
                     new HttpPatchRequest(yourJson.toString(), takerId).execute();
                     Log.e(TAG, "Push Request!");
@@ -287,7 +282,6 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                 }
                 //하트 아이콘 바꾸기
                 holder.heartButton.setImageResource(R.drawable.red_heart);
-
                 return false;
             }
         });

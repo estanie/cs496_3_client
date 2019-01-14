@@ -17,7 +17,7 @@ import com.example.q.cs496_3.models.Image;
 import java.util.ArrayList;
 
 public class SelectPictureActivity extends AppCompatActivity {
-    private final String TAG = "SELECT_PICTURE_ACTIVITY";
+    private final String TAG = "SelectPictureActivity";
     private RecyclerView mRecyclerView;
     private FloatingActionButton mFab;
     private RecyclerView.Adapter mAdapter;

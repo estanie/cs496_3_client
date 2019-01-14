@@ -234,7 +234,7 @@ public class ModifyActivity extends AppCompatActivity {
                 User user = new User(null, editName.getText().toString(), gender,null,
                         editResidence.getText().toString(), editContact.getText().toString(),
                         editJob.getText().toString(), editHobby.getText().toString(),
-                        null, id, birthday, token);
+                        null, id, birthday, 0 , token);
 
                 //데이터 유효성 검사 Photo부분, 신규가입이거나 사진변경을 했으면 확인해야함
                 if (!isMember || isPhotoChange) {
