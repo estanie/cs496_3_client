@@ -19,7 +19,7 @@
             android:id="@+id/mEntryPhoto"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            tools:src="@mipmap/ic_launcher" />
+            tools:src="@mipmap/ic_launcher2" />
 
         <LinearLayout
             android:id="@+id/linear11"

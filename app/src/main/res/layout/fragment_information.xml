@@ -48,12 +48,12 @@
         android:layout_margin="15sp"
         android:elevation="0dp"
         android:padding="1dp"
-        android:scaleType="matrix"
-        android:src="@mipmap/ic_launcher_round"
-        app:backgroundTint="@color/colorPrimaryDark"
+        android:scaleType="fitXY"
+        android:src="@drawable/red_heart"
+        app:backgroundTint="#FFFF"
         app:elevation="0dp"
         app:fabSize="normal"
-        app:maxImageSize="39dp" />
+        app:maxImageSize="60dp" />
 
 
 
@@ -71,7 +71,7 @@
             android:layout_gravity="top|center_horizontal"
             android:layout_marginTop="30dp"
             android:layout_marginBottom="30dp"
-            android:src="@mipmap/ic_launcher"
+            android:src="@mipmap/ic_launcher2"
             android:contentDescription="user photo"
             />
 

@@ -48,6 +48,7 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
     }
     
     public class viewHolder extends RecyclerView.ViewHolder {
+        private RelativeLayout viewEntry;
         private ImageView viewPhoto;
         private TextView viewName;
         private TextView viewAge;
@@ -65,7 +66,10 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
             viewJob = itemView.findViewById(R.id.oEntryJob);
             viewHobby =itemView.findViewById(R.id.oEntryHobby);
             heartButton = itemView.findViewById(R.id.heartSignalButton);
+
         }
+
+
     }
     
     @NonNull
@@ -80,6 +84,7 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
     public void onBindViewHolder(@NonNull final OtherAdapter.viewHolder holder, final int i) {
         //holder.viewPhoto;
 
+
         Uri uri = null;
         ImageAdapter imageAdapter = new ImageAdapter(holder.viewPhoto.getContext(), uri);
         //ImageView imageView = new ImageView(getContext());
@@ -92,13 +97,17 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
         requestBuilder.into(holder.viewPhoto);
         final String takerId = userData.get(i).getId();
         final String myId = Profile.getCurrentProfile().getId();
-
         holder.viewPhoto.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         holder.viewName.setText(userData.get(i).getName());
         holder.viewAge.setText(userData.get(i).getAge());
         holder.viewResidence.setText(userData.get(i).getResidence());
         holder.viewJob.setText(userData.get(i).getJob());
         holder.viewHobby.setText(userData.get(i).getHobby());
+        if (userData.get(i).getLike_me() == 1)
+        {
+            holder.heartButton.setImageResource(R.drawable.heart_to_me_2);
+        }
+
         holder.heartButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -107,8 +116,7 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                 //Some url endpoint that you may have
                 String mUrl = "http://143.248.140.106:2580/members/";
                 String myUrl = mUrl + myId;
-
-                // String to place our result in
+                //String to place our result in
                 String get_my_result;
                 JSONArray my_gave = new JSONArray();
                 JSONArray my_received = new JSONArray();
@@ -119,23 +127,22 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                 HttpGetRequest getMyRequest = new HttpGetRequest();
                 try {
                     get_my_result = getMyRequest.execute(myUrl).get();
-                    Log.d(TAG, get_my_result == null ? "0" : get_my_result);
+                    Log.d("hihi", get_my_result == null ? "0" : get_my_result);
                     if (get_my_result != null) {
-
                         JSONObject myJsonObj = new JSONObject(get_my_result);
                         //.getJSONObject("member");
                         JSONObject member = myJsonObj.getJSONObject("member");
                         my_gave = member.getJSONArray("gave");
                         my_received = member.getJSONArray("received");
                         my_success = member.getJSONArray("success");
-                        Log.e(TAG, "MY RECEIVE: "+ my_received.toString());
-                        Log.e(TAG, "MY SUCCESS: "+ my_success.toString());
-                        Log.e(TAG, "MY GAVE: "+ my_gave.toString());
+                        Log.d("gave", my_gave.toString());
                     }
                 } catch (ExecutionException e) {
+                    Log.e("error", "haha");
                     e.printStackTrace();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                    Log.e("error", "haha");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -169,6 +176,7 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                     e.printStackTrace();
                 }
 
+
                 JSONObject json = new JSONObject();
                 List<JSONObject> linkerList = new ArrayList<>();
                 boolean matched = false;
@@ -193,6 +201,7 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
 
                     List<JSONObject> my_linkerList = new ArrayList<>(); // 대괄호 역할
                     List<JSONObject> your_linkerList = new ArrayList<>(); // 대괄호 역할
+
                     // 나와 상대방 success에 서로의 uId 추가
                     JSONObject myJson = new JSONObject(); // 중괄호 역할
                     JSONObject yourJson = new JSONObject(); // 중괄호 역할
@@ -218,6 +227,7 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                             e.printStackTrace();
                         }
                     }
+
                     // 상대의 gave에서 나의 uId 제거
                     JSONArray new_your_gave = new JSONArray();
                     for (int j = 0; j < your_gave.length(); ++j) {
@@ -275,9 +285,9 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                         e.printStackTrace();
                     }
                 }
-
                 //하트 아이콘 바꾸기
-                holder.heartButton.setImageResource(R.drawable.chan_heart_image);
+                holder.heartButton.setImageResource(R.drawable.red_heart);
+
                 return false;
             }
         });

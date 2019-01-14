@@ -180,6 +180,7 @@ public class ModifyActivity extends AppCompatActivity {
             id = intent.getStringExtra("id");
             name = intent.getStringExtra("name");
             birthday = intent.getStringExtra("birthday");//생년월일 순서 정렬
+            birthday = changeOrder(birthday);
             gender = intent.getStringExtra("gender");
         }
 
@@ -234,9 +235,6 @@ public class ModifyActivity extends AppCompatActivity {
                         editResidence.getText().toString(), editContact.getText().toString(),
                         editJob.getText().toString(), editHobby.getText().toString(),
                         null, id, birthday, token);
-
-                //gender check, 생년월일 -> 나이
-                birthday = changeOrder(birthday);
 
                 //데이터 유효성 검사 Photo부분, 신규가입이거나 사진변경을 했으면 확인해야함
                 if (!isMember || isPhotoChange) {
