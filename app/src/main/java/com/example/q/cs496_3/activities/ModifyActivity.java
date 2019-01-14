@@ -214,17 +214,10 @@ public class ModifyActivity extends AppCompatActivity {
 
                 // TODO(estanie): 기존 유저이면서 다른 핸드폰으로 가면 수정하기 전까지는 전 핸드폰에 알람감.
                 String token = FirebaseInstanceId.getInstance().getToken();
-                photo = new File(path).getName();
-                User user = new User(null, editName.getText().toString(), gender, null,
-                        editResidence.getText().toString(), editContact.getText().toString(),
-                        editJob.getText().toString(), editHobby.getText().toString(),
-                        photo, id, birthday, 0, token);
-
-                // 생년월일 -> 나이
-                birthday = changeOrder(birthday);
 
                 //데이터 유효성 검사 Photo부분, 신규가입이거나 사진변경을 했으면 확인해야함
                 if (!isMember || isPhotoChange) {
+                    photo = new File(path).getName();
                     try {
                         new HttpUploadRequest(path, getApplicationContext()).execute();
                     } catch (NullPointerException e) {
@@ -234,6 +227,14 @@ public class ModifyActivity extends AppCompatActivity {
                         return;
                     }
                 }
+
+                User user = new User(null, editName.getText().toString(), gender, null,
+                        editResidence.getText().toString(), editContact.getText().toString(),
+                        editJob.getText().toString(), editHobby.getText().toString(),
+                        photo, id, birthday, 0, token);
+
+                // 생년월일 -> 나이
+                birthday = changeOrder(birthday);
 
                 // 여기가 데이터 보내는 부분. 아래있는 형식대로 데이터를 넘기면 된다.
                 try {
