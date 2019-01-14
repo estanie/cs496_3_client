@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 28
@@ -37,13 +38,17 @@ dependencies {
 
     implementation 'com.facebook.android:facebook-android-sdk:4.39.0'
     implementation 'com.koushikdutta.ion:ion:2.2.1'
-    implementation group: 'cz.msebera.android' , name: 'httpclient' , version: '4.4.1.2'
+    implementation group: 'cz.msebera.android', name: 'httpclient', version: '4.4.1.2'
     implementation group: 'commons-io', name: 'commons-io', version: '2.4'
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
     implementation 'com.google.android.gms:play-services:12.0.1'
     implementation 'com.android.support:multidex:1.0.3'
-    implementation ('com.facebook.android:audience-network-sdk:4.28.0',{
+    implementation 'com.google.firebase:firebase-core:16.0.1'
+    implementation 'com.google.firebase:firebase-messaging:17.3.1'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation('com.facebook.android:audience-network-sdk:4.28.0', {
         exclude group: 'com.google.android.gms'
     })
 }
+apply plugin: 'com.google.gms.google-services'

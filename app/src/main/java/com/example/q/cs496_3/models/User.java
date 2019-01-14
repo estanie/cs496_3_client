@@ -13,10 +13,12 @@ public class User {
     private String id;
     private String date_of_birth;
     private int like_me;
+    private String token;
+    private Boolean likeMe = false;
 
     public User() {}
     public User(String image, String name, String gender, String age, String residence, String contact,
-         String job, String hobby, String photo, String id, String date_of_birth) {
+         String job, String hobby, String photo, String id, String date_of_birth, int like_me, String token) {
         this.image = image;
         this.name = name;
         this.gender = gender;
@@ -29,6 +31,7 @@ public class User {
         this.id = id;
         this.date_of_birth = date_of_birth;
         this.like_me = like_me;
+        this.token = token;
     }
 
     //TODO : Image
@@ -69,4 +72,8 @@ public class User {
 
     public int getLike_me() {return like_me;}
     public void setLike_me(int like_me) {this.like_me = like_me;}
+
+    public String getToken() {return token;}
+    public void setToken(String token) {this.token = token;}
+
 }

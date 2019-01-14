@@ -21,6 +21,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.example.q.cs496_3.R;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.concurrent.ExecutionException;
 
@@ -29,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private LoginButton loginButton;
     private CallbackManager callbackManager;
     private AccessToken token;
+
+    private final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         loginButton = (LoginButton)findViewById(R.id.login_button);
         loginButton.setReadPermissions("public_profile","user_birthday", "user_friends","user_gender");
         token = AccessToken.getCurrentAccessToken();
+        Log.e(TAG, "onCreate Start");
 
         //TODO 로그인 되어있다면, 회원일 경우(uid를 통해서 해결) 바로 information으로 이동한다. 회원이 아닌경우 로그아웃을 한다.
         if (token != null){
@@ -48,13 +53,15 @@ public class MainActivity extends AppCompatActivity {
                 HttpGetRequest getRequest = new HttpGetRequest();
                 String myUrl = "http://143.248.140.106:2580/members";
                 String get_result = getRequest.execute(myUrl).get();
-                JSONObject jsonObj = new JSONObject(get_result);
-                JSONArray members = jsonObj.getJSONArray("members");
+                if (get_result != null) {
+                    JSONObject jsonObj = new JSONObject(get_result);
+                    JSONArray members = jsonObj.getJSONArray("members");
 
-                for (int i = 0; i < members.length(); ++i) {
-                    JSONObject m = members.getJSONObject(i);
-                    if (id.equals(m.getString("uId"))){
-                        isUser = true;
+                    for (int i = 0; i < members.length(); ++i) {
+                        JSONObject m = members.getJSONObject(i);
+                        if (id.equals(m.getString("uId"))) {
+                            isUser = true;
+                        }
                     }
                 }
             } catch (ExecutionException e) {
@@ -93,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
                                         String get_result = getRequest.execute(myUrl).get();
                                         JSONObject jsonObj = new JSONObject(get_result);
                                         JSONArray members = jsonObj.getJSONArray("members");
+                                        // TODO(estanie): 로직 변경하기.
                                         for (int i = 0; i < members.length(); ++i) {
                                             JSONObject m = members.getJSONObject(i);
                                             if (id.equals(m.getString("uId"))){

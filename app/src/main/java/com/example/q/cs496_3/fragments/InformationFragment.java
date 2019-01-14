@@ -131,12 +131,11 @@ public class InformationFragment extends Fragment implements View.OnClickListene
 
         viewName.setText(name);
         viewGender.setText(gender);
-        viewAge.setText(age+"");
+        viewAge.setText(""+age);
         viewContact.setText(contact);
         viewResidence.setText(residence);
         viewJob.setText(job);
         viewHobby.setText(hobby);
-
 
 /*
         //FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);

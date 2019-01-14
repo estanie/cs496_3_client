@@ -36,9 +36,15 @@ import com.example.q.cs496_3.https.HttpPatchRequest;
 import com.example.q.cs496_3.https.HttpPostRequest;
 import com.example.q.cs496_3.models.User;
 import com.facebook.Profile;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.koushikdutta.async.future.FutureCallback;
@@ -61,7 +67,7 @@ import info.hoang8f.android.segmented.SegmentedGroup;
 public class ModifyActivity extends AppCompatActivity {
     public final int IMAGE_PICK = 100;
     public final int REQUEST_CODE = 1;
-    public final String TAG = "MODIFY_ACTIVITY";
+    public final String TAG = "ModifyActivity";
     private String id;
     private String name;
     private String gender;
@@ -69,6 +75,7 @@ public class ModifyActivity extends AppCompatActivity {
     private RadioButton male, female;
     private boolean isMember;
     private boolean isPhotoChange = false;
+    private boolean isUserStyleSelected = false;
     private String photo;
     public String path;
     public File f;
@@ -78,7 +85,18 @@ public class ModifyActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+       /* FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+        mUser.getIdToken(true)
+                .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<GetTokenResult> task) {
+                        if (task.isSuccessful()) {
+                            String idToken = task.getResult().getToken();
+                            Log.d(TAG, idToken);
+                        }
+                    }
+                });
+                */
         //맨위 TITEL_BAR 제거
         requestWindowFeature(Window.FEATURE_NO_TITLE);//will hide the title
         getSupportActionBar().hide();
@@ -119,17 +137,20 @@ public class ModifyActivity extends AppCompatActivity {
 
         json = new JSONObject();
 
-
         //TODO 이미 회원인 경우 모든 데이터를 이전과 동일하게 채워넣는다.
         if (isMember){
             HttpGetRequest getMyRequest = new HttpGetRequest();
             id = Profile.getCurrentProfile().getId();
             String myUrl = "http://143.248.140.106:2580/members/"+id;
+            Log.e(TAG, "IS MEMBER");
             try {
                 String str = getMyRequest.execute(myUrl).get();
                 JSONObject myJsonObj = new JSONObject(str);
                 Gson gson = new GsonBuilder().create();
                 String jsons = myJsonObj.getString("member");
+                if (!myJsonObj.getJSONObject("member").getJSONArray("style").toString().equals("[]")) {
+                    isUserStyleSelected = true;
+                }
                 User user = gson.fromJson(jsons, User.class);
                 name = user.getName();
                 gender = user.getGender();
@@ -207,10 +228,13 @@ public class ModifyActivity extends AppCompatActivity {
                     gender = "male";
                 }
 
+                // TODO(estanie): 기존 유저이면서 다른 핸드폰으로 가면 수정하기 전까지는 전 핸드폰에 알람감.
+                String token = FirebaseInstanceId.getInstance().getToken();
+                Log.e(TAG, token);
                 User user = new User(null, editName.getText().toString(), gender,null,
                         editResidence.getText().toString(), editContact.getText().toString(),
                         editJob.getText().toString(), editHobby.getText().toString(),
-                        null, id, birthday);
+                        null, id, birthday, token);
 
                 //데이터 유효성 검사 Photo부분, 신규가입이거나 사진변경을 했으면 확인해야함
                 if (!isMember || isPhotoChange) {
@@ -263,17 +287,9 @@ public class ModifyActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                Log.d("ID!!!", id);
-                Log.d("Name!!!", editName.getText().toString());
-                Log.d("Gender!!!", gender);
-                Log.d("Age!!!", editBirthday.getText().toString());
-                Log.d("Contact!!!", editContact.getText().toString());
-                Log.d("Residence!!!", editResidence.getText().toString());
-                Log.d("Job!!!", editJob.getText().toString());
-                Log.d("Hobby!!!", editHobby.getText().toString());
 
                 // 원래 멤버일 경우 이전 페이지로 이동. 아닌 경우, 마음에 드는 얼굴 찾는 페이지로 이동.
-                if (isMember) {
+                if (isMember && isUserStyleSelected) {
                     startActivity(new Intent(
                             ModifyActivity.this, FragmentActivity.class));
                 } else {

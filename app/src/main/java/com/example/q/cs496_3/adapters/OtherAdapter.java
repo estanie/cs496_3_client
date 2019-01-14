@@ -19,8 +19,12 @@ import com.bumptech.glide.RequestManager;
 import com.example.q.cs496_3.R;
 import com.example.q.cs496_3.https.HttpGetRequest;
 import com.example.q.cs496_3.https.HttpPatchRequest;
+import com.example.q.cs496_3.https.HttpPushRequest;
 import com.example.q.cs496_3.models.User;
 import com.facebook.Profile;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,6 +41,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> {
     private ArrayList<User> userData;
+    private final String TAG = "OTHER_ADAPTER";
 
     public OtherAdapter(ArrayList<User> data){
         userData = data;
@@ -61,7 +66,10 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
             viewJob = itemView.findViewById(R.id.oEntryJob);
             viewHobby =itemView.findViewById(R.id.oEntryHobby);
             heartButton = itemView.findViewById(R.id.heartSignalButton);
+
         }
+
+
     }
     
     @NonNull
@@ -75,6 +83,8 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
     @Override
     public void onBindViewHolder(@NonNull final OtherAdapter.viewHolder holder, final int i) {
         //holder.viewPhoto;
+
+
         Uri uri = null;
         ImageAdapter imageAdapter = new ImageAdapter(holder.viewPhoto.getContext(), uri);
         //ImageView imageView = new ImageView(getContext());
@@ -166,6 +176,7 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                     e.printStackTrace();
                 }
 
+
                 JSONObject json = new JSONObject();
                 List<JSONObject> linkerList = new ArrayList<>();
                 boolean matched = false;
@@ -183,32 +194,27 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
 
                 // matching 성공 시
                 if (matched) {
-                    Toast toast = Toast.makeText(getApplicationContext(), "운명적 만남이 시작됐어요", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            R.string.match_success, Toast.LENGTH_SHORT);
                     toast.show();
+                    Gson gson = new GsonBuilder().create();
+
                     List<JSONObject> my_linkerList = new ArrayList<>(); // 대괄호 역할
                     List<JSONObject> your_linkerList = new ArrayList<>(); // 대괄호 역할
 
                     // 나와 상대방 success에 서로의 uId 추가
-                    JSONObject json_my_success = new JSONObject(); // 중괄호 역할
-                    JSONObject json_your_success = new JSONObject(); // 중괄호 역할
+                    JSONObject myJson = new JSONObject(); // 중괄호 역할
+                    JSONObject yourJson = new JSONObject(); // 중괄호 역할
                     my_success.put(takerId);
                     Log.d("takerId", takerId);
                     your_success.put(myId);
                     Log.d("myId", takerId);
                     try {
-                        json_my_success.put("propName", "success");
-                        json_my_success.put("value", my_success);
-                        json_your_success.put("propName", "success");
-                        json_your_success.put("value", your_success);
+                        myJson.put("success", my_success);
+                        yourJson.put("success", your_success);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-                    my_linkerList.add(json_my_success);
-                    your_linkerList.add(json_your_success);
-
-                    JSONObject json_my_received = new JSONObject();
-                    JSONObject json_your_gave = new JSONObject();
 
                     // 나의 received에서 상대 uId 제거
                     JSONArray new_my_received = new JSONArray();
@@ -235,58 +241,45 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                     }
 
                     try {
-                        json_my_received.put("propName", "received");
-                        json_my_received.put("value", new_my_received);
-                        json_your_gave.put("propName", "gave");
-                        json_your_gave.put("value", new_your_gave);
+                        myJson.put("received", new_my_received);
+                        yourJson.put("gave", new_your_gave);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
-                    my_linkerList.add(json_my_received);
-                    your_linkerList.add(json_your_gave);
-
                     //httprequestclass 로 보내서 실행시키기
-                    Log.d("NOWPATCH","START1");
-                    new HttpPatchRequest(my_linkerList.toString(), myId).execute();
-
-                    Log.d("NOWPATCH","START2");
-                    new HttpPatchRequest(your_linkerList.toString(), takerId).execute();
+                    new HttpPatchRequest(myJson.toString(), myId).execute();
+                    new HttpPatchRequest(yourJson.toString(), takerId).execute();
+                    Log.e(TAG, "Push Request!");
+                    new HttpPushRequest(myId, takerId).execute();
                 } else { // match 실패
-                    Toast toast = Toast.makeText(getApplicationContext(), "기다림의 설렘을 느껴봐요!!", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getApplicationContext(), R.string.match_waiting, Toast.LENGTH_SHORT);
                     toast.show();
                     try {
                         //하트 받는 사람의 received 에 내 id 넣기
                         your_received.put(myId);
-                        json.put("propName", "received");
-                        json.put("value", your_received);
-                        linkerList.add(json);
+                        json.put("received", your_received);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                     try {
                         //httprequestclass 로 보내서 실행시키기
-                        new HttpPatchRequest(linkerList.toString(), takerId).execute();
+                        new HttpPatchRequest(json.toString(), takerId).execute();
 
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    //내 gave에 하트 받는 사람 id 넣기0
+                    //내 gave에 하트 받는 사람 id 넣기
                     JSONObject json_2 = new JSONObject();
-                    List<JSONObject> linkerList_2 = new ArrayList<>();
-                    Log.d("gave2", my_gave.toString());
                     my_gave.put(takerId);
-                    Log.d("gave3", my_gave.toString());
                     try {
-                        json_2.put("propName", "gave");
-                        json_2.put("value", my_gave);
-                        linkerList_2.add(json_2);
+                        json_2.put("gave", my_gave);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                     try {
                         //httprequestclass 로 보내서 실행시키기
-                        new HttpPatchRequest(linkerList_2.toString(), myId).execute();
+                        new HttpPatchRequest(json_2.toString(), myId).execute();
 
                     } catch (Exception e) {
                         e.printStackTrace();
