@@ -38,7 +38,7 @@ public class HttpUploadRequest extends AsyncTask<String, Void, String> {
     }
 
     private void uploadImage(String path) {
-        String url = "http://socrip4.kaist.ac.kr:2580/upload";
+        String url = "http://socrip4.kaist.ac.kr:2580/uploads";
         final File f = new File(path);
         RequestQueue mRequestQueue = Volley.newRequestQueue(context);
         StringRequest mStringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
