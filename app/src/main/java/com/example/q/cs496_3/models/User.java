@@ -12,6 +12,7 @@ public class User {
     private String photo;
     private String id;
     private String date_of_birth;
+    private int like_me;
 
     public User() {}
     public User(String image, String name, String gender, String age, String residence, String contact,
@@ -27,6 +28,7 @@ public class User {
         this.photo = photo;
         this.id = id;
         this.date_of_birth = date_of_birth;
+        this.like_me = like_me;
     }
 
     //TODO : Image
@@ -64,4 +66,7 @@ public class User {
 
     public String getDate_of_birth() {return date_of_birth;}
     public void setDate_of_birth(String date_of_birth) {this.date_of_birth = date_of_birth;}
+
+    public int getLike_me() {return like_me;}
+    public void setLike_me(int like_me) {this.like_me = like_me;}
 }

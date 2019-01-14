@@ -47,6 +47,7 @@ public class OtherFragment extends Fragment {
 
         String myGender;
         JSONArray mySuccess;
+        JSONArray myReceived;
         String name="";
         String gender="";
         int age=0;
@@ -58,6 +59,7 @@ public class OtherFragment extends Fragment {
         //String to place our result in
         String get_result = "";
         String get_my_result;
+        String get_giver_result;
         //Instantiate new instance of our class GET
         HttpGetRequest getRequest = new HttpGetRequest();
         HttpGetRequest getMyRequest = new HttpGetRequest();
@@ -66,11 +68,44 @@ public class OtherFragment extends Fragment {
 
         try {
             get_my_result = getRequest.execute(myUrl).get();
+            Log.d("my_result", get_my_result);
             JSONObject myJsonObj = new JSONObject(get_my_result);
             //.getJSONObject("member");
             JSONObject member = myJsonObj.getJSONObject("member");
             myGender = member.getString("gender");
             mySuccess = member.getJSONArray("success");
+            myReceived = member.getJSONArray("received");
+            Log.d("yayaya", "yiyi");
+            for (int i = 0; i < myReceived.length(); ++i)
+            {
+                String giverId = myReceived.getString(i);
+                String giverUrl = mUrl + giverId;
+                HttpGetRequest getGiverRequest = new HttpGetRequest();
+                get_giver_result = getGiverRequest.execute(giverUrl).get();
+                JSONObject giverJsonObj = new JSONObject(get_giver_result);
+                JSONObject m = giverJsonObj.getJSONObject("member");
+                photo = m.getString("photo");
+                name = m.getString("name");
+                age = m.getInt("age");
+                contact = m.getString("contact");
+                residence = m.getString("residence");
+                job = m.getString("job");
+                hobby = m.getString("hobby");
+                User user1 = new User();
+                user1.setName(name);
+                user1.setAge("" + age);
+                user1.setResidence(residence);
+                user1.setHobby(hobby);
+                user1.setJob(job);
+                user1.setPhoto(photo);
+                user1.setId(id);
+                Log.d("like_me","hahaha");
+                user1.setLike_me(1);
+                userData.add(user1);
+            }
+
+            Log.d("wowow", "wiwiwi");
+
             get_result = getMyRequest.execute(mUrl).get();
             JSONObject jsonObj = new JSONObject(get_result); //
 
@@ -88,6 +123,16 @@ public class OtherFragment extends Fragment {
                         for (int j = 0; j < mySuccess.length(); ++j)
                         {
                             if (id.equals(mySuccess.getString(j)))
+                            {
+                                run = false;
+                            }
+                        }
+                    }
+                    if (myReceived != null)
+                    {
+                        for (int j = 0; j < myReceived.length(); ++j)
+                        {
+                            if (id.equals(myReceived.getString(j)))
                             {
                                 run = false;
                             }

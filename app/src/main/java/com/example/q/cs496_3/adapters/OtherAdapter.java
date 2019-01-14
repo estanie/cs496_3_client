@@ -61,10 +61,7 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
             viewJob = itemView.findViewById(R.id.oEntryJob);
             viewHobby =itemView.findViewById(R.id.oEntryHobby);
             heartButton = itemView.findViewById(R.id.heartSignalButton);
-
         }
-
-
     }
     
     @NonNull
@@ -78,8 +75,6 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
     @Override
     public void onBindViewHolder(@NonNull final OtherAdapter.viewHolder holder, final int i) {
         //holder.viewPhoto;
-
-
         Uri uri = null;
         ImageAdapter imageAdapter = new ImageAdapter(holder.viewPhoto.getContext(), uri);
         //ImageView imageView = new ImageView(getContext());
@@ -98,6 +93,11 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
         holder.viewResidence.setText(userData.get(i).getResidence());
         holder.viewJob.setText(userData.get(i).getJob());
         holder.viewHobby.setText(userData.get(i).getHobby());
+        if (userData.get(i).getLike_me() == 1)
+        {
+            holder.heartButton.setImageResource(R.drawable.heart_to_me_2);
+        }
+
         holder.heartButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -165,7 +165,6 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
 
                 JSONObject json = new JSONObject();
                 List<JSONObject> linkerList = new ArrayList<>();
@@ -294,7 +293,7 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                     }
                 }
                 //하트 아이콘 바꾸기
-                holder.heartButton.setImageResource(R.drawable.chan_heart_image);
+                holder.heartButton.setImageResource(R.drawable.red_heart);
 
                 return false;
             }
