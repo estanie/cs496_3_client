@@ -19,7 +19,7 @@ import com.example.q.cs496_3.models.Image;
 import java.util.ArrayList;
 
 public class SelectPictureAdapter extends RecyclerView.Adapter<SelectPictureAdapter.ViewHolder> {
-    private final String TAG = "SELECT_PICTURE_ADAPTER";
+    private final String TAG = "SelectPictureAdapter";
     // TODO(estanie): Image 어떤식으로 받을지 고민...
     private ArrayList<Image> imageData;
     private Context mContext;
@@ -56,7 +56,6 @@ public class SelectPictureAdapter extends RecyclerView.Adapter<SelectPictureAdap
             public void onClick(View v) {
                 imageData.get(i).toggle();
                 Log.e(TAG, "Clicked " + i);
-
             }
         });
         // TODO(estanie): 사진 다중 선택기능 추가.
