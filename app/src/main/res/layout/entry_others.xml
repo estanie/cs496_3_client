@@ -99,7 +99,7 @@
             android:layout_alignParentBottom="true"
             android:background="#FFFF"
             android:scaleType="fitXY"
-            android:src="@drawable/heart_22" />
+            android:src="@drawable/heart_222" />
 
     </RelativeLayout>
 
