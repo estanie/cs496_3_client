@@ -67,21 +67,33 @@ public class OtherFragment extends Fragment {
                     .getJSONObject("member");
             style = json.getJSONArray("style");
             received = json.getJSONArray("received");
-
+            Gson gson = new GsonBuilder().create();
             userData.clear();
             do {
                 myUrl = mUrl + "other/" + id;
                 JSONArray userList = new JSONObject(new HttpGetRequest().execute(myUrl).get())
                         .getJSONArray("members");
-                Gson gson = new GsonBuilder().create();
                 for (int i = 0; i < userList.length(); i++) {
                     userData.add(gson.fromJson(userList.getJSONObject(i).toString(), User.class));
                 }
             } while (userData == null && style != null && style.length() != 0);
             String newUrls = "http://143.248.140.106:2580/members";
-            JSONArray userList = new JSONObject(new HttpGetRequest().execute(myUrl).get())
+            JSONArray userLists = new JSONObject(new HttpGetRequest().execute(newUrls).get())
                     .getJSONArray("members");
-
+            ArrayList<String> userIds = new ArrayList<>();
+            ArrayList<String> currentUserIds = new ArrayList<>();
+            for (int i = 0;i<userLists.length();i++) {
+                 userIds.add(userLists.getJSONObject(i).getString("uId"));
+            }
+            for (int i = 0;i<currentUserIds.size();i++) {
+                currentUserIds.add(userData.get(i).getUId());
+            }
+            for (int i = 0;i<userIds.size();i++) {
+                if (!currentUserIds.contains(userIds.get(i))) {
+                    currentUserIds.add(userIds.get(i));
+                    userData.add(gson.fromJson(userLists.getJSONObject(i).toString(), User.class));
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
