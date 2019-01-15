@@ -87,5 +87,4 @@ public class User {
 
     public boolean getIsMyStyle() {return isMyStyle;}
     public void setIsMyStyle(boolean isMyStyle) {this.isMyStyle = isMyStyle;}
-
 }
