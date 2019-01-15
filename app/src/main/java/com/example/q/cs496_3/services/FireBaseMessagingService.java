@@ -50,7 +50,7 @@ public class FireBaseMessagingService extends FirebaseMessagingService {
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
                         .setSmallIcon(R.mipmap.ic_launcher2)
-                        .setContentTitle("취향 저격")
+                        .setContentTitle("취향저격")
                         .setContentText(messageBody)
                         .setAutoCancel(true)
                         .setSound(defaultSoundUri)

@@ -100,6 +100,10 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                 ImageButton heartButton = (ImageButton) view.findViewById(R.id.heartSignalButton);
                 heartButton.setImageResource(R.drawable.new_red_heart);
             }
+            if (userData.get(i).getLike_me() == 1) {
+                ImageButton heartButton = (ImageButton) view.findViewById(R.id.heartSignalButton);
+                heartButton.setImageResource(R.drawable.heart_to_me_2);
+            }
         }
         return new viewHolder(view, isSelectPicture);
     }
