@@ -51,6 +51,7 @@ public class OtherFragment extends Fragment {
         JSONArray mySuccess;
         JSONArray myReceived;
         JSONArray mySorted;
+        JSONArray myStyle;
         String name="";
         String gender="";
         int age=0;
@@ -64,7 +65,6 @@ public class OtherFragment extends Fragment {
         String get_my_result;
         String get_giver_result;
         //Instantiate new instance of our class GET
-        HttpGetRequest getRequest = new HttpGetRequest();
         HttpGetRequest getMyRequest = new HttpGetRequest();
         //Perform the doInBackground method, passing in our url
         userData=new ArrayList<User>();
@@ -79,6 +79,7 @@ public class OtherFragment extends Fragment {
             mySuccess = member.getJSONArray("success");
             myReceived = member.getJSONArray("received");
             mySorted = member.getJSONArray("sorted");
+            myStyle =  member.getJSONArray("style");
             Log.d("yayaya", "yiyi");
             for (int i = 0; i < myReceived.length(); ++i)
             {
@@ -110,8 +111,9 @@ public class OtherFragment extends Fragment {
 
             Log.d("mySorted", mySorted.toString());
 
-            while (mySorted.length() == 0)
+            while (myStyle.length() != 0 &&mySorted.length() == 0)
             {
+                HttpGetRequest getRequest = new HttpGetRequest();
                 get_my_result = getRequest.execute(myUrl).get();
                 Log.d("my_result", get_my_result);
                 JSONObject myJsonObj2 = new JSONObject(get_my_result);
