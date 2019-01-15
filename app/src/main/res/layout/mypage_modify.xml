@@ -74,6 +74,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
+                    android:fontFamily="@font/mf_time_traveler"
                     android:text="male"
                     android:textColor="@color/colorPrimary"
                     android:textColorLink="@color/colorPrimaryDark" />
@@ -84,6 +85,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
+                    android:fontFamily="@font/mf_time_traveler"
                     android:text="female"
                     android:textColorLink="@color/colorPrimaryDark" />
 

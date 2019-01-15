@@ -48,6 +48,7 @@ public class OtherFragment extends Fragment {
         String myGender;
         JSONArray mySuccess;
         JSONArray myReceived;
+        JSONArray mySorted;
         String name="";
         String gender="";
         int age=0;
@@ -75,7 +76,9 @@ public class OtherFragment extends Fragment {
             myGender = member.getString("gender");
             mySuccess = member.getJSONArray("success");
             myReceived = member.getJSONArray("received");
+            mySorted = member.getJSONArray("sorted");
             Log.d("yayaya", "yiyi");
+
             for (int i = 0; i < myReceived.length(); ++i)
             {
                 String giverId = myReceived.getString(i);
@@ -105,6 +108,46 @@ public class OtherFragment extends Fragment {
             }
 
             Log.d("wowow", "wiwiwi");
+
+
+            // sorted 생기면 여기 주석 풀고 밑을 주석처리하기
+            /*
+            for (int i = 0; i < mySorted.length(); ++i)
+            {
+                boolean run = true;
+                for (int j = 0; j < myReceived.length(); ++j)
+                {
+                    if (mySorted.getString(i).equals(myReceived.getString(j)))
+                    {
+                        run = false;
+                        break;
+                    }
+                }
+                if (run)
+                {
+                    HttpGetRequest getSortedRequest = new HttpGetRequest();
+                    String get_sorted_result = getSortedRequest.execute(mUrl + mySorted.getString(i)).get();
+                    JSONObject m = new JSONObject(get_sorted_result);
+
+                    photo = m.getString("photo");
+                    name = m.getString("name");
+                    age = m.getInt("age");
+                    contact = m.getString("contact");
+                    residence = m.getString("residence");
+                    job = m.getString("job");
+                    hobby = m.getString("hobby");
+
+                    User user1 = new User();
+                    user1.setName(name);
+                    user1.setAge("" + age);
+                    user1.setResidence(residence);
+                    user1.setHobby(hobby);
+                    user1.setJob(job);
+                    user1.setPhoto(photo);
+                    user1.setUId(id);
+                    userData.add(user1);
+                }
+            }*/
 
             get_result = getMyRequest.execute(mUrl).get();
             JSONObject jsonObj = new JSONObject(get_result); //
