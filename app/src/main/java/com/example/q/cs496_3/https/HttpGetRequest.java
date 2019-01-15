@@ -21,8 +21,7 @@ public class HttpGetRequest extends AsyncTask<String, Void, String> {
             //Create a URL object holding our url
             URL myUrl = new URL(stringUrl);
             //Create a connection
-            HttpURLConnection connection =(HttpURLConnection)
-                    myUrl.openConnection();
+            HttpURLConnection connection =(HttpURLConnection) myUrl.openConnection();
             //Set methods and timeouts
             connection.setRequestMethod(REQUEST_METHOD);
             connection.setReadTimeout(READ_TIMEOUT);
