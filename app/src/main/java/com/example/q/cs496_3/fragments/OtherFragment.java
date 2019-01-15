@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.q.cs496_3.R;
 import com.example.q.cs496_3.adapters.OtherAdapter;
@@ -135,8 +136,8 @@ public class OtherFragment extends Fragment {
                 {
                     HttpGetRequest getSortedRequest = new HttpGetRequest();
                     String get_sorted_result = getSortedRequest.execute(mUrl + mySorted.getString(i)).get();
-                    JSONObject m = new JSONObject(get_sorted_result);
-
+                    JSONObject sortedJsonObj = new JSONObject(get_sorted_result);
+                    JSONObject m = sortedJsonObj.getJSONObject("member");
                     photo = m.getString("photo");
                     name = m.getString("name");
                     age = m.getInt("age");

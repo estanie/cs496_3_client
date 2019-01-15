@@ -23,6 +23,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class SelectPictureActivity extends AppCompatActivity {
     private final String TAG = "SelectPictureActivity";
@@ -74,6 +75,37 @@ public class SelectPictureActivity extends AppCompatActivity {
             // Getting JSON Array node
             JSONArray members = jsonObj.getJSONArray("members");
 
+            ArrayList<Integer> indices = new ArrayList<>();
+
+            while (indices.size() < 30)
+            {
+                int randomNum = ThreadLocalRandom.current().nextInt(0, members.length());
+                boolean run = true;
+                for (int i = 0; i < indices.size(); ++i)
+                {
+                    if (indices.get(i) == randomNum)
+                        run = false;
+                }
+                JSONObject m = members.getJSONObject(randomNum);
+                gender = m.getString("gender");
+                if (gender.equals(myGender))
+                    run = false;
+                if (run)
+                    indices.add(randomNum);
+            }
+
+            for (int i = 0; i < indices.size(); ++i)
+            {
+                JSONObject m = members.getJSONObject(indices.get(i));
+                String id = m.getString("uId");
+                photo = m.getString("photo");
+                User user1 = new User();
+                user1.setPhoto(photo);
+                user1.setUId(id);
+                user1.setIsStyleSet(1);
+                userData.add(user1);
+            }
+            /*
             for (int i = 0; i < members.length(); ++i) {
                 JSONObject m = members.getJSONObject(i);
                 gender = m.getString("gender");
@@ -86,7 +118,7 @@ public class SelectPictureActivity extends AppCompatActivity {
                     user1.setIsStyleSet(1);
                     userData.add(user1);
                 }
-            }
+            }*/
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
