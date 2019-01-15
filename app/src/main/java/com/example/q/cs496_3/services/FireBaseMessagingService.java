@@ -28,6 +28,7 @@ public class FireBaseMessagingService extends FirebaseMessagingService {
             } else {
                 handleNow();
             }
+            sendNotification(remoteMessage.getData().get("body"));
         }
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
