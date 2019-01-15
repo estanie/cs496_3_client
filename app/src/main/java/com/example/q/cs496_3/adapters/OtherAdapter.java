@@ -91,14 +91,14 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
             if (UserSingleton.getInstance().getMyStyle(userData.get(i).getUId())) {
                 Log.d("islike", "hhhh");
                 ImageButton heartButton = (ImageButton) view.findViewById(R.id.heartSignalButton);
-                heartButton.setImageResource(R.drawable.red_heart);
+                heartButton.setImageResource(R.drawable.new_red_heart);
             }
         } else {
             view = LayoutInflater.from(viewGroup.getContext())
                     .inflate(R.layout.entry_others, viewGroup, false);
             if (UserSingleton.getInstance().getILike(userData.get(i).getUId())) {
                 ImageButton heartButton = (ImageButton) view.findViewById(R.id.heartSignalButton);
-                heartButton.setImageResource(R.drawable.red_heart);
+                heartButton.setImageResource(R.drawable.new_red_heart);
             }
         }
         return new viewHolder(view, isSelectPicture);
@@ -123,12 +123,12 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
             if (UserSingleton.getInstance().getMyStyle(userData.get(i).getUId())) {
                 Log.d("islike", "hhhh");
                 ImageButton heartButton = (ImageButton) holder.heartButton;
-                heartButton.setImageResource(R.drawable.red_heart);
+                heartButton.setImageResource(R.drawable.new_red_heart);
             }
         } else {
             if (UserSingleton.getInstance().getILike(userData.get(i).getUId())) {
                 ImageButton heartButton = (ImageButton) holder.heartButton;
-                heartButton.setImageResource(R.drawable.red_heart);
+                heartButton.setImageResource(R.drawable.new_red_heart);
             }
         }
         final String takerId = userData.get(i).getUId();
@@ -332,7 +332,7 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                 }
 
                 //하트 아이콘 바꾸기
-                holder.heartButton.setImageResource(R.drawable.red_heart);
+                holder.heartButton.setImageResource(R.drawable.new_red_heart);
                 if (isSelectPicture) {
                     UserSingleton.getInstance().setMyStyleTrue(takerId);
                     if (UserSingleton.getInstance().getMyStyle(takerId))
