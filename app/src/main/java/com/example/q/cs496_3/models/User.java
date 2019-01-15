@@ -1,5 +1,7 @@
 package com.example.q.cs496_3.models;
 
+import org.json.JSONArray;
+
 public class User {
     private String image;
     private String name;
@@ -17,10 +19,11 @@ public class User {
     private int isStyleSet;
     private boolean isILike = false;
     private boolean isMyStyle = false;
+    private JSONArray myStyleList = new JSONArray();
 
     public User() {}
     public User(String image, String name, String gender, String age, String residence, String contact,
-         String job, String hobby, String photo, String uId, String date_of_birth, int like_me, String token, int isStyleSet) {
+         String job, String hobby, String photo, String uId, String date_of_birth, int like_me, String token, int isStyleSet, JSONArray myStyleList) {
         this.image = image;
         this.name = name;
         this.gender = gender;
@@ -35,6 +38,7 @@ public class User {
         this.like_me = like_me;
         this.token = token;
         this.isStyleSet = isStyleSet;
+        this.myStyleList = myStyleList;
     }
 
     //TODO : Image
@@ -87,5 +91,10 @@ public class User {
 
     public boolean getIsMyStyle() {return isMyStyle;}
     public void setIsMyStyle(boolean isMyStyle) {this.isMyStyle = isMyStyle;}
+
+    public JSONArray getMyStyleList() {return this.myStyleList;}
+    public void addMyStyleList(String photo) {
+        this.myStyleList.put(photo);
+    }
 
 }

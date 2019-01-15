@@ -13,6 +13,7 @@ import android.view.Window;
 import com.example.q.cs496_3.R;
 import com.example.q.cs496_3.adapters.OtherAdapter;
 import com.example.q.cs496_3.https.HttpGetRequest;
+import com.example.q.cs496_3.https.HttpPatchRequest;
 import com.example.q.cs496_3.models.User;
 import com.facebook.Profile;
 
@@ -30,6 +31,8 @@ public class SelectPictureActivity extends AppCompatActivity {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<User> userData;
+    User user = new User();
+    String id = Profile.getCurrentProfile().getId();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +44,9 @@ public class SelectPictureActivity extends AppCompatActivity {
         setContentView(R.layout.activity_select_picture);
         userData = new ArrayList<>();
 
-        String id = Profile.getCurrentProfile().getId();
         String mUrl = "http://143.248.140.106:2580/members/";
         String myUrl = mUrl + id;
+
 
         String myGender;
         String gender="";
@@ -104,7 +107,8 @@ public class SelectPictureActivity extends AppCompatActivity {
         // TODO(estanie): mImageData 테스트용임. Random 한 이미지 서버로부터 받기..
 
 
-        mAdapter = new OtherAdapter(userData, true);
+        mAdapter = new OtherAdapter(userData, true, user);
+
         mRecyclerView.setAdapter(mAdapter);
 
         mFab.setOnClickListener(new View.OnClickListener() {
@@ -112,7 +116,13 @@ public class SelectPictureActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // TODO(estanie): 10장 이상 골랐는지 확인하고 넘어가고, 데이터 서버에 보내서 계산하게 시키기.
 
-
+                JSONObject myStyleJson = new JSONObject();
+                try {
+                    myStyleJson.put("style", user.getMyStyleList());
+                    new HttpPatchRequest(myStyleJson.toString(), id).execute();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 Intent intent = new Intent(SelectPictureActivity.this, FragmentActivity.class);
                 startActivity(intent);
                 setResult(RESULT_OK);
