@@ -76,6 +76,9 @@ public class OtherFragment extends Fragment {
                 Gson gson = new GsonBuilder().create();
                 for (int i = 0; i < userList.length(); i++) {
                     userData.add(gson.fromJson(userList.getJSONObject(i).toString(), User.class));
+                    for (int j = 0; j < received.length(); j++) {
+                        userData.get(i).setLike_me(1);
+                    }
                 }
             } while (userData == null && style != null && style.length() != 0);
             String newUrls = "http://143.248.140.106:2580/members";
@@ -86,6 +89,8 @@ public class OtherFragment extends Fragment {
             e.printStackTrace();
         }
         for (int i = 0; i < received.length(); i++) {
+
+            userData.get(i).setLike_me(1);
         }
         mAdapter.notifyDataSetChanged();
         mView.findViewById(R.id.progressBar2).setVisibility(View.INVISIBLE);
