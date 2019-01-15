@@ -30,6 +30,8 @@ public class OtherFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManger;
     private ArrayList<User> userData;
+    User user = new User();
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,11 +107,19 @@ public class OtherFragment extends Fragment {
                 userData.add(user1);
             }
 
-            Log.d("wowow", "wiwiwi");
+            Log.d("mySorted", mySorted.toString());
 
-
+            while (mySorted.length() == 0)
+            {
+                get_my_result = getRequest.execute(myUrl).get();
+                Log.d("my_result", get_my_result);
+                JSONObject myJsonObj2 = new JSONObject(get_my_result);
+                //.getJSONObject("member");
+                JSONObject member2 = myJsonObj2.getJSONObject("member");
+                mySorted = member2.getJSONArray("sorted");
+            }
+            Log.d("mySorted2", mySorted.toString());
             // sorted 생기면 여기 주석 풀고 밑을 주석처리하기
-            /*
             for (int i = 0; i < mySorted.length(); ++i)
             {
                 boolean run = true;
@@ -145,8 +155,8 @@ public class OtherFragment extends Fragment {
                     user1.setUId(id);
                     userData.add(user1);
                 }
-            }*/
-
+            }
+/*
             get_result = getMyRequest.execute(mUrl).get();
             JSONObject jsonObj = new JSONObject(get_result); //
 
@@ -198,7 +208,7 @@ public class OtherFragment extends Fragment {
 
                     }
                 }
-            }
+            }*/
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -215,7 +225,7 @@ public class OtherFragment extends Fragment {
         mLayoutManger = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManger);
         mRecyclerView.setHasFixedSize(true);
-        mAdapter = new OtherAdapter(userData, false);
+        mAdapter = new OtherAdapter(userData, false, user);
         mRecyclerView.setAdapter(mAdapter);
 
         return view;

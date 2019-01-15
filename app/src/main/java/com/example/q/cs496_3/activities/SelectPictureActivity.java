@@ -32,7 +32,7 @@ public class SelectPictureActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<User> userData;
     User user = new User();
-    String id = Profile.getCurrentProfile().getId();
+    String myId = Profile.getCurrentProfile().getId();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +45,7 @@ public class SelectPictureActivity extends AppCompatActivity {
         userData = new ArrayList<>();
 
         String mUrl = "http://143.248.140.106:2580/members/";
-        String myUrl = mUrl + id;
+        String myUrl = mUrl + myId;
 
 
         String myGender;
@@ -77,7 +77,7 @@ public class SelectPictureActivity extends AppCompatActivity {
             for (int i = 0; i < members.length(); ++i) {
                 JSONObject m = members.getJSONObject(i);
                 gender = m.getString("gender");
-                id = m.getString("uId");
+                String id = m.getString("uId");
                 if (!gender.equals(myGender)) {
                     photo = m.getString("photo");
                     User user1 = new User();
@@ -119,7 +119,7 @@ public class SelectPictureActivity extends AppCompatActivity {
                 JSONObject myStyleJson = new JSONObject();
                 try {
                     myStyleJson.put("style", user.getMyStyleList());
-                    new HttpPatchRequest(myStyleJson.toString(), id).execute();
+                    new HttpPatchRequest(myStyleJson.toString(), myId).execute();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
