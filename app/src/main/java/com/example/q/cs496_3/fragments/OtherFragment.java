@@ -60,9 +60,14 @@ public class OtherFragment extends Fragment {
         mView.findViewById(R.id.findNewUser).setVisibility(View.INVISIBLE);
         // TODO(gayeon): 로딩중이니까 나중에 다시 시도하라고 해주기!
         JSONArray style = null;
+        JSONArray received = null;
+        JSONObject json = null;
         try {
-            style = new JSONObject(new HttpGetRequest().execute(myUrl).get())
-                    .getJSONObject("member").getJSONArray("style");
+            json = new JSONObject(new HttpGetRequest().execute(myUrl).get())
+                    .getJSONObject("member");
+            style = json.getJSONArray("style");
+            received = json.getJSONArray("received");
+
             userData.clear();
             do {
                 myUrl = mUrl + "other/" + id;
@@ -73,15 +78,20 @@ public class OtherFragment extends Fragment {
                     userData.add(gson.fromJson(userList.getJSONObject(i).toString(), User.class));
                 }
             } while (userData == null && style != null && style.length() != 0);
+            String newUrls = "http://143.248.140.106:2580/members";
+            JSONArray userList = new JSONObject(new HttpGetRequest().execute(myUrl).get())
+                    .getJSONArray("members");
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-            mAdapter.notifyDataSetChanged();
-            mView.findViewById(R.id.progressBar2).setVisibility(View.INVISIBLE);
-            mView.findViewById(R.id.waitingText).setVisibility(View.INVISIBLE);
-            if (userData == null || (userData!= null && userData.size() == 0)) {
-                mView.findViewById(R.id.findNewUser).setVisibility(View.VISIBLE);
-            }
+        for (int i = 0; i < received.length(); i++) {
+        }
+        mAdapter.notifyDataSetChanged();
+        mView.findViewById(R.id.progressBar2).setVisibility(View.INVISIBLE);
+        mView.findViewById(R.id.waitingText).setVisibility(View.INVISIBLE);
+        if (userData == null || (userData != null && userData.size() == 0)) {
+            mView.findViewById(R.id.findNewUser).setVisibility(View.VISIBLE);
+        }
     }
 }
