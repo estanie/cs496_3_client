@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.q.cs496_3.R;
 import com.example.q.cs496_3.https.HttpGetRequest;
 import com.example.q.cs496_3.https.HttpPatchRequest;
@@ -88,7 +89,7 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
     @Override
     public void onBindViewHolder(@NonNull final OtherAdapter.viewHolder holder, final int i) {
         //holder.viewPhoto;
-
+        holder.setIsRecyclable(false);
             Uri uri = null;
             ImageAdapter imageAdapter = new ImageAdapter(holder.viewPhoto.getContext(), uri);
             //ImageView imageView = new ImageView(getContext());
@@ -98,7 +99,9 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
             //requestBuilder = requestBuilder.apply(new RequestOptions().override(250, 250));
             // Show image into target imageview.
             Log.d("PHOTOPHOTO", userData.get(i).getPhoto() == null ? "1" : "WOOOW");
-            requestBuilder.into(holder.viewPhoto);
+            requestBuilder.apply(new RequestOptions()
+                .centerCrop())
+                .into(holder.viewPhoto);
             final String takerId = userData.get(i).getUId();
             final String myId = Profile.getCurrentProfile().getId();
         if (userData.get(i).getIsStyleSet() == 0) {
