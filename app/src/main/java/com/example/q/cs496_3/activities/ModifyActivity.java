@@ -135,6 +135,7 @@ public class ModifyActivity extends AppCompatActivity {
                 if (!myJsonObj.getJSONObject("member").getJSONArray("style").toString().equals("[]")) {
                     isUserStyleSelected = true;
                 }
+                Log.e(TAG, jsons);
                 User user = gson.fromJson(jsons, User.class);
                 name = user.getName();
                 gender = user.getGender();
@@ -165,6 +166,7 @@ public class ModifyActivity extends AppCompatActivity {
             id = intent.getStringExtra("id");
             name = intent.getStringExtra("name");
             birthday = intent.getStringExtra("birthday");//생년월일 순서 정렬
+            birthday = changeOrder(birthday);
             gender = intent.getStringExtra("gender");
         }
 
@@ -228,13 +230,11 @@ public class ModifyActivity extends AppCompatActivity {
                         return;
                     }
                 }
-
-                // 생년월일 -> 나이
-                birthday = changeOrder(birthday);
                 User user = new User(null, editName.getText().toString(), gender, null,
                         editResidence.getText().toString(), editContact.getText().toString(),
                         editJob.getText().toString(), editHobby.getText().toString(),
-                        photo, id, birthday, 0, token);
+                        photo, id, birthday, 0, token, 0);
+
                 // 여기가 데이터 보내는 부분. 아래있는 형식대로 데이터를 넘기면 된다.
                 try {
                     Gson gson = new GsonBuilder().create();
@@ -259,6 +259,8 @@ public class ModifyActivity extends AppCompatActivity {
                     startActivity(new Intent(
                             ModifyActivity.this, FragmentActivity.class));
                 } else {
+//                    startActivity(new Intent(
+//                            ModifyActivity.this, StyleActivity.class));
                     startActivity(new Intent(
                             ModifyActivity.this, SelectPictureActivity.class));
                 }

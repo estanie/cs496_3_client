@@ -1,20 +1,20 @@
 package com.example.q.cs496_3.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 
 import com.example.q.cs496_3.R;
 import com.example.q.cs496_3.adapters.OtherAdapter;
-import com.example.q.cs496_3.adapters.SelectPictureAdapter;
 import com.example.q.cs496_3.https.HttpGetRequest;
-import com.example.q.cs496_3.models.Image;
 import com.example.q.cs496_3.models.User;
 import com.facebook.Profile;
 
@@ -25,24 +25,18 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-public class SelectPictureActivity extends AppCompatActivity {
-    private final String TAG = "SelectPictureActivity";
+public class StyleActivity extends AppCompatActivity {
+
     private RecyclerView mRecyclerView;
-    private FloatingActionButton mFab;
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerView.LayoutManager mLayoutManger;
     private ArrayList<User> userData;
 
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //맨위 TITEL_BAR 제거
         requestWindowFeature(Window.FEATURE_NO_TITLE);//will hide the title
         getSupportActionBar().hide();
-        setContentView(R.layout.activity_select_picture);
-        userData = new ArrayList<>();
-
+        setContentView(R.layout.activity_style);
         String id = Profile.getCurrentProfile().getId();
         String mUrl = "http://143.248.140.106:2580/members/";
         String myUrl = mUrl + id;
@@ -97,30 +91,14 @@ public class SelectPictureActivity extends AppCompatActivity {
             Log.e("!!!!!","nullpointerexception");
         }
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.imageGrid);
-        mFab = (FloatingActionButton) findViewById(R.id.selectConfirm);
-        mLayoutManager = new GridLayoutManager(this, 2);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView = findViewById(R.id.othersRecyclerView);
+
+        mLayoutManger = new LinearLayoutManager(getApplicationContext());
+        mRecyclerView.setLayoutManager(mLayoutManger);
         mRecyclerView.setHasFixedSize(true);
-
-        // TODO(estanie): mImageData 테스트용임. Random 한 이미지 서버로부터 받기..
-
 
         mAdapter = new OtherAdapter(userData);
         mRecyclerView.setAdapter(mAdapter);
-
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // TODO(estanie): 10장 이상 골랐는지 확인하고 넘어가고, 데이터 서버에 보내서 계산하게 시키기.
-
-
-
-                Intent intent = new Intent(SelectPictureActivity.this, FragmentActivity.class);
-                startActivity(intent);
-                setResult(RESULT_OK);
-                finish();
-            }
-        });
     }
+
 }

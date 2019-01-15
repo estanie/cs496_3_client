@@ -14,11 +14,11 @@ public class User {
     private String date_of_birth;
     private int like_me;
     private String token;
-    private Boolean likeMe = false;
+    private int isStyleSet;
 
     public User() {}
     public User(String image, String name, String gender, String age, String residence, String contact,
-         String job, String hobby, String photo, String uId, String date_of_birth, int like_me, String token) {
+         String job, String hobby, String photo, String uId, String date_of_birth, int like_me, String token, int isStyleSet) {
         this.image = image;
         this.name = name;
         this.gender = gender;
@@ -32,6 +32,7 @@ public class User {
         this.date_of_birth = date_of_birth;
         this.like_me = like_me;
         this.token = token;
+        this.isStyleSet = isStyleSet;
     }
 
     //TODO : Image
@@ -75,5 +76,8 @@ public class User {
 
     public String getToken() {return token;}
     public void setToken(String token) {this.token = token;}
+
+    public int getIsStyleSet() {return isStyleSet;}
+    public void setIsStyleSet(int isStyleSet) {this.isStyleSet = isStyleSet;}
 
 }

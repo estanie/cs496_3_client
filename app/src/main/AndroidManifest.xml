@@ -38,6 +38,7 @@
         <activity android:name="com.example.q.cs496_3.activities.ModifyActivity" />
         <activity android:name="com.example.q.cs496_3.activities.FragmentActivity" />
         <activity android:name="com.example.q.cs496_3.activities.SelectPictureActivity" />
+        <activity android:name="com.example.q.cs496_3.activities.StyleActivity" />
         <service android:name=".services.FireBaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
