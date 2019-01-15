@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.example.q.cs496_3.R;
 import com.example.q.cs496_3.adapters.OtherAdapter;
 import com.example.q.cs496_3.https.HttpGetRequest;
 import com.example.q.cs496_3.models.User;
+import com.example.q.cs496_3.models.UserSingleton;
 import com.facebook.Profile;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -61,23 +63,27 @@ public class OtherFragment extends Fragment {
         // TODO(gayeon): 로딩중이니까 나중에 다시 시도하라고 해주기!
         JSONArray style = null;
         JSONArray received = null;
+        JSONArray success = null;
         JSONObject json = null;
+        User me = null;
         try {
+            Gson gson = new GsonBuilder().create();
             json = new JSONObject(new HttpGetRequest().execute(myUrl).get())
                     .getJSONObject("member");
+            me = gson.fromJson(json.toString(), User.class);
             style = json.getJSONArray("style");
             received = json.getJSONArray("received");
-            Gson gson = new GsonBuilder().create();
+            success = json.getJSONArray("success");
             userData.clear();
             do {
                 myUrl = mUrl + "other/" + id;
                 JSONArray userList = new JSONObject(new HttpGetRequest().execute(myUrl).get())
                         .getJSONArray("members");
+                for (int j = 0; j < received.length(); j++) {
+                    UserSingleton.getInstance().setLikeMeTrue(received.getString(j));
+                }
                 for (int i = 0; i < userList.length(); i++) {
                     userData.add(gson.fromJson(userList.getJSONObject(i).toString(), User.class));
-                    for (int j = 0; j < received.length(); j++) {
-                        userData.get(i).setLike_me(1);
-                    }
                 }
             } while (userData == null && style != null && style.length() != 0);
             String newUrls = "http://143.248.140.106:2580/members";
@@ -85,24 +91,36 @@ public class OtherFragment extends Fragment {
                     .getJSONArray("members");
             ArrayList<String> userIds = new ArrayList<>();
             ArrayList<String> currentUserIds = new ArrayList<>();
+            ArrayList<String> successLists = new ArrayList<>();
+            ArrayList<String> receivedLists = new ArrayList<>();
+            for (int i = 0;i<received.length();i++) {
+                receivedLists.add(received.getString(i));
+            }
+            for (int i = 0;i<success.length();i++) {
+                successLists.add(success.getString(i));
+            }
+            Log.e(TAG, "SIZE: "+userLists.length());
             for (int i = 0;i<userLists.length();i++) {
                  userIds.add(userLists.getJSONObject(i).getString("uId"));
             }
             for (int i = 0;i<currentUserIds.size();i++) {
                 currentUserIds.add(userData.get(i).getUId());
             }
+
+            Log.e(TAG, "나: " + me.getUId());
             for (int i = 0;i<userIds.size();i++) {
+                Log.e(TAG, userIds.get(i));
                 if (!currentUserIds.contains(userIds.get(i))) {
-                    currentUserIds.add(userIds.get(i));
-                    userData.add(gson.fromJson(userLists.getJSONObject(i).toString(), User.class));
+                    if (!userLists.getJSONObject(i).getString("gender").equals(me.getGender())
+                            && !userIds.get(i).equals(me.getUId()) && !successLists.contains(userIds.get(i))
+                            && !receivedLists.get(i).contains(userIds.get(i))) {
+                        currentUserIds.add(userIds.get(i));
+                        userData.add(gson.fromJson(userLists.getJSONObject(i).toString(), User.class));
+                    }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        for (int i = 0; i < received.length(); i++) {
-
-            userData.get(i).setLike_me(1);
         }
         mAdapter.notifyDataSetChanged();
         mView.findViewById(R.id.progressBar2).setVisibility(View.INVISIBLE);

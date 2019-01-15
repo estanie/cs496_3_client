@@ -96,14 +96,14 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
         } else {
             view = LayoutInflater.from(viewGroup.getContext())
                     .inflate(R.layout.entry_others, viewGroup, false);
-            if (UserSingleton.getInstance().getILike(userData.get(i).getUId())) {
-                ImageButton heartButton = (ImageButton) view.findViewById(R.id.heartSignalButton);
-                heartButton.setImageResource(R.drawable.new_red_heart);
-            }
-            if (userData.get(i).getLike_me() == 1) {
-                ImageButton heartButton = (ImageButton) view.findViewById(R.id.heartSignalButton);
-                heartButton.setImageResource(R.drawable.heart_to_me_2);
-            }
+//            if (UserSingleton.getInstance().getILike(userData.get(i).getUId())) {
+//                ImageButton heartButton = (ImageButton) view.findViewById(R.id.heartSignalButton);
+//                heartButton.setImageResource(R.drawable.new_red_heart);
+//            }
+//            if (userData.get(i).getLike_me() == 1) {
+//                ImageButton heartButton = (ImageButton) view.findViewById(R.id.heartSignalButton);
+//                heartButton.setImageResource(R.drawable.heart_to_me_2);
+//            }
         }
         return new viewHolder(view, isSelectPicture);
     }
@@ -134,6 +134,10 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                 ImageButton heartButton = (ImageButton) holder.heartButton;
                 heartButton.setImageResource(R.drawable.new_red_heart);
             }
+            if (UserSingleton.getInstance().getLikeMe(userData.get(i).getUId())) {
+                ImageButton heartButton = (ImageButton) holder.heartButton;
+                heartButton.setImageResource(R.drawable.heart_to_me_2);
+            }
         }
         final String takerId = userData.get(i).getUId();
         final String myId = Profile.getCurrentProfile().getId();
@@ -144,9 +148,7 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
             holder.viewResidence.setText(userData.get(i).getResidence());
             holder.viewJob.setText(userData.get(i).getJob());
             holder.viewHobby.setText(userData.get(i).getHobby());
-            if (userData.get(i).getLike_me() == 1) {
-                holder.heartButton.setImageResource(R.drawable.heart_to_me_2);
-            }
+
         }
 
         holder.heartButton.setOnLongClickListener(new View.OnLongClickListener() {
