@@ -98,7 +98,6 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
             RequestBuilder requestBuilder = requestManager.load("http://143.248.140.106:2580/uploads/" + userData.get(i).getPhoto());
             //requestBuilder = requestBuilder.apply(new RequestOptions().override(250, 250));
             // Show image into target imageview.
-            Log.d("PHOTOPHOTO", userData.get(i).getPhoto() == null ? "1" : "WOOOW");
             requestBuilder.apply(new RequestOptions()
                 .centerCrop())
                 .into(holder.viewPhoto);
