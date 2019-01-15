@@ -7,7 +7,6 @@ import java.util.Calendar;
 public class UserSingleton {
     public static UserSingleton instance;
     private User user;
-
     private UserSingleton() { }
     static {
         try {

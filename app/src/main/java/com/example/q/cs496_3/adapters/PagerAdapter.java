@@ -37,4 +37,5 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
         fragmentList.add(fragment);
         FragmentListTitles.add(Title);
     }
+
 }
