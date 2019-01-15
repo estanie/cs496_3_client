@@ -217,8 +217,9 @@ public class ModifyActivity extends AppCompatActivity {
 
                 //데이터 유효성 검사 Photo부분, 신규가입이거나 사진변경을 했으면 확인해야함
                 if (!isMember || isPhotoChange) {
-                    photo = new File(path).getName();
                     try {
+                        File f = new File(path);
+                        photo = f.getName();
                         new HttpUploadRequest(path, getApplicationContext()).execute();
                     } catch (NullPointerException e) {
                         Toast toast = Toast.makeText(getApplicationContext(),
@@ -228,14 +229,12 @@ public class ModifyActivity extends AppCompatActivity {
                     }
                 }
 
+                // 생년월일 -> 나이
+                birthday = changeOrder(birthday);
                 User user = new User(null, editName.getText().toString(), gender, null,
                         editResidence.getText().toString(), editContact.getText().toString(),
                         editJob.getText().toString(), editHobby.getText().toString(),
                         photo, id, birthday, 0, token);
-
-                // 생년월일 -> 나이
-                birthday = changeOrder(birthday);
-
                 // 여기가 데이터 보내는 부분. 아래있는 형식대로 데이터를 넘기면 된다.
                 try {
                     Gson gson = new GsonBuilder().create();

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.q.cs496_3.R;
 import com.example.q.cs496_3.models.User;
 
@@ -64,9 +65,12 @@ public class MatchAdapter extends RecyclerView.Adapter<MatchAdapter.viewHolder> 
         RequestManager requestManager = Glide.with(imageAdapter.getContext());
         // Create request builder and load image.
         RequestBuilder requestBuilder = requestManager.load("http://143.248.140.106:2580/uploads/"+userData.get(i).getPhoto());
+        requestBuilder
+                .apply(new RequestOptions()
+                .centerCrop())
+                .into(holder.viewPhoto);
         //requestBuilder = requestBuilder.apply(new RequestOptions().override(250, 250));
         // Show image into target imageview.
-        requestBuilder.into(holder.viewPhoto);
         holder.viewName.setText(userData.get(i).getName());
         holder.viewAge.setText(userData.get(i).getAge());
         holder.viewResidence.setText(userData.get(i).getResidence());

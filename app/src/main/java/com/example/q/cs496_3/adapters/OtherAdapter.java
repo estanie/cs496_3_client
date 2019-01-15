@@ -250,6 +250,7 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                 } else { // match 실패
                     Toast toast = Toast.makeText(getApplicationContext(), R.string.match_waiting, Toast.LENGTH_SHORT);
                     toast.show();
+                    new HttpPushRequest("", takerId).execute();
                     try {
                         //하트 받는 사람의 received 에 내 id 넣기
                         your_received.put(myId);
