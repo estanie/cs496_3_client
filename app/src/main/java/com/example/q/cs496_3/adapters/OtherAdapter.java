@@ -122,6 +122,10 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
             if (userData.get(i).getLike_me() == 1) {
                 holder.heartButton.setImageResource(R.drawable.heart_to_me_2);
             }
+            if (userData.get(i).getIsILike()) {
+                Log.d("islike", "hhhh");
+                holder.heartButton.setImageResource(R.drawable.red_heart);
+            }
         }
 
         holder.heartButton.setOnLongClickListener(new View.OnLongClickListener() {
@@ -312,6 +316,9 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
 
                 //하트 아이콘 바꾸기
                 holder.heartButton.setImageResource(R.drawable.red_heart);
+                userData.get(i).setIsILike(true);
+                if (userData.get(i).getIsILike())
+                    Log.d("isILike", "hohoho");
                 return false;
             }
         });
