@@ -96,6 +96,10 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
         } else {
             view = LayoutInflater.from(viewGroup.getContext())
                     .inflate(R.layout.entry_others, viewGroup, false);
+            if (UserSingleton.getInstance().getILike(userData.get(i).getUId())) {
+                ImageButton heartButton = (ImageButton) view.findViewById(R.id.heartSignalButton);
+                heartButton.setImageResource(R.drawable.red_heart);
+            }
         }
         return new viewHolder(view, isSelectPicture);
     }
@@ -115,10 +119,17 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
         requestBuilder.apply(new RequestOptions()
                 .centerCrop())
                 .into(holder.viewPhoto);
-        if (UserSingleton.getInstance().getMyStyle(userData.get(i).getUId())) {
-            Log.d("islike", "hhhh");
-            ImageButton heartButton = (ImageButton) holder.heartButton;
-            heartButton.setImageResource(R.drawable.red_heart);
+        if (isSelectPicture) {
+            if (UserSingleton.getInstance().getMyStyle(userData.get(i).getUId())) {
+                Log.d("islike", "hhhh");
+                ImageButton heartButton = (ImageButton) holder.heartButton;
+                heartButton.setImageResource(R.drawable.red_heart);
+            }
+        } else {
+            if (UserSingleton.getInstance().getILike(userData.get(i).getUId())) {
+                ImageButton heartButton = (ImageButton) holder.heartButton;
+                heartButton.setImageResource(R.drawable.red_heart);
+            }
         }
         final String takerId = userData.get(i).getUId();
         final String myId = Profile.getCurrentProfile().getId();
@@ -322,9 +333,15 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
 
                 //하트 아이콘 바꾸기
                 holder.heartButton.setImageResource(R.drawable.red_heart);
-                UserSingleton.getInstance().setMyStyleTrue(takerId);
-                if (UserSingleton.getInstance().getMyStyle(takerId))
-                    Log.d("isILike", "hohoho");
+                if (isSelectPicture) {
+                    UserSingleton.getInstance().setMyStyleTrue(takerId);
+                    if (UserSingleton.getInstance().getMyStyle(takerId))
+                        Log.d("isILike", "hohoho");
+                } else {
+                    UserSingleton.getInstance().setILikeTrue(takerId);
+                    if (UserSingleton.getInstance().getILike(takerId))
+                        Log.d("isILike", "hohoho");
+                }
                 return false;
             }
         });

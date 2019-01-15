@@ -55,10 +55,13 @@ public class OtherFragment extends Fragment {
         String mUrl = "http://143.248.140.106:2580/members/";
         String myUrl = mUrl + id;
         //String to place our result in
-
+        mView.findViewById(R.id.progressBar2).setVisibility(View.VISIBLE);
+        mView.findViewById(R.id.waitingText).setVisibility(View.VISIBLE);
+        mView.findViewById(R.id.findNewUser).setVisibility(View.INVISIBLE);
         // TODO(gayeon): 로딩중이니까 나중에 다시 시도하라고 해주기!
+        JSONArray style = null;
         try {
-            JSONArray style = new JSONObject(new HttpGetRequest().execute(myUrl).get())
+            style = new JSONObject(new HttpGetRequest().execute(myUrl).get())
                     .getJSONObject("member").getJSONArray("style");
             userData.clear();
             do {
@@ -69,11 +72,16 @@ public class OtherFragment extends Fragment {
                 for (int i = 0; i < userList.length(); i++) {
                     userData.add(gson.fromJson(userList.getJSONObject(i).toString(), User.class));
                 }
-            } while (userData == null && style.length() != 0);
+            } while (userData == null && style != null && style.length() != 0);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
             mAdapter.notifyDataSetChanged();
+            mView.findViewById(R.id.progressBar2).setVisibility(View.INVISIBLE);
+            mView.findViewById(R.id.waitingText).setVisibility(View.INVISIBLE);
+            if (style!= null && style.length() == 0) {
+                mView.findViewById(R.id.findNewUser).setVisibility(View.VISIBLE);
+            }
     }
 }

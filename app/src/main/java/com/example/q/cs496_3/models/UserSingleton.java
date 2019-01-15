@@ -11,6 +11,7 @@ public class UserSingleton {
     public static UserSingleton instance;
     private User user;
     private Map<String, Boolean> isMyStyleList = new HashMap<>();
+    private Map<String, Boolean> isILikeList = new HashMap<>();
     private UserSingleton() { }
     static {
         try {
@@ -20,6 +21,9 @@ public class UserSingleton {
         }
     }
 
+    public void resetStyle() {
+        isMyStyleList.clear();
+    }
     public void setMyStyleTrue(String uId) {
         Log.e(TAG, "Set" + uId);
         isMyStyleList.put(uId, true);
@@ -28,6 +32,14 @@ public class UserSingleton {
     public boolean getMyStyle(String uId) {
         Log.e(TAG, "Get" + uId);
         if (isMyStyleList.get(uId) != null) return true;
+        return false;
+    }
+
+    public void setILikeTrue(String uId) {
+        isILikeList.put(uId, true);
+    }
+    public boolean getILike(String uId) {
+        if (isILikeList.get(uId)!= null) return true;
         return false;
     }
     public static UserSingleton getInstance() {
