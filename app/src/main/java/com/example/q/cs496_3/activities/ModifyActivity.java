@@ -48,6 +48,7 @@ import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.ProgressCallback;
 import com.koushikdutta.ion.Response;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -233,7 +234,7 @@ public class ModifyActivity extends AppCompatActivity {
                 User user = new User(null, editName.getText().toString(), gender, null,
                         editResidence.getText().toString(), editContact.getText().toString(),
                         editJob.getText().toString(), editHobby.getText().toString(),
-                        photo, id, birthday, 0, token, 0);
+                        photo, id, birthday, 0, token, 0, new JSONArray());
 
                 // 여기가 데이터 보내는 부분. 아래있는 형식대로 데이터를 넘기면 된다.
                 try {

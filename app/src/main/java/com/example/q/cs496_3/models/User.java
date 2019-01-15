@@ -1,6 +1,6 @@
 package com.example.q.cs496_3.models;
 
-import java.util.List;
+import org.json.JSONArray;
 
 public class User {
     private String name;
@@ -18,15 +18,13 @@ public class User {
     private int isStyleSet;
     private boolean isILike = false;
     private boolean isMyStyle = false;
-    private String[] style;
-    private String[] success;
-    private String[] received;
-    private String[] gave;
+
+    private JSONArray myStyleList = new JSONArray();
 
     public User() {}
-    public User(String name, String gender, String age, String residence, String contact,
-         String job, String hobby, String photo, String uId, String date_of_birth, int like_me,
-                String token, int isStyleSet) {
+    public User(String image, String name, String gender, String age, String residence, String contact,
+         String job, String hobby, String photo, String uId, String date_of_birth, int like_me, String token, int isStyleSet, JSONArray myStyleList) {
+        this.image = image;
         this.name = name;
         this.gender = gender;
         this.age = age;
@@ -40,10 +38,8 @@ public class User {
         this.like_me = like_me;
         this.token = token;
         this.isStyleSet = isStyleSet;
-        style = new String[0];
-        success = new String[0];
-        received = new String[0];
-        gave = new String[0];
+
+        this.myStyleList = myStyleList;
     }
 
     //TODO : Image
@@ -96,16 +92,8 @@ public class User {
 
     public boolean getIsMyStyle() {return isMyStyle;}
     public void setIsMyStyle(boolean isMyStyle) {this.isMyStyle = isMyStyle;}
-
-    public String[] getStyle() {return style;}
-    public void setStyle(String[] style) {this.style = style;}
-
-    public String[] getSuccess() {return success;}
-    public void setSuccess(String[] success) {this.success = success;}
-
-    public String[] getReceived() {return received;}
-    public void setReceived(String[] received) {this.received = received;}
-
-    public String[] getGave() {return gave;}
-    public void setGave(String[] gave) {this.gave = gave;}
+    public JSONArray getMyStyleList() {return this.myStyleList;}
+    public void addMyStyleList(String photo) {
+        this.myStyleList.put(photo);
+    }
 }

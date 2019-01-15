@@ -39,11 +39,19 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> {
     private ArrayList<User> userData;
     private boolean isSelectPicture = false;
+    private User user = new User();
     private final String TAG = "OtherAdapter";
+    JSONArray my_style = new JSONArray();
 
     public OtherAdapter(ArrayList<User> data, boolean isSelectPicture){
         userData = data;
         this.isSelectPicture = isSelectPicture;
+    }
+
+    public OtherAdapter(ArrayList<User> data, boolean isSelectPicture, User user){
+        userData = data;
+        this.isSelectPicture = isSelectPicture;
+        this.user = user;
     }
     
     public class viewHolder extends RecyclerView.ViewHolder {
@@ -129,7 +137,6 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                 JSONArray my_gave = new JSONArray();
                 JSONArray my_received = new JSONArray();
                 JSONArray my_success = new JSONArray();
-                JSONArray my_style = new JSONArray();
 
                 //내 gaved, received, success 받아오기
                 //Instantiate new instance of our class GET
@@ -145,7 +152,7 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                         my_gave = member.getJSONArray("gave");
                         my_received = member.getJSONArray("received");
                         my_success = member.getJSONArray("success");
-                        my_style = member.getJSONArray("style");
+                        //my_style = member.getJSONArray("style");
                         Log.d("gave", my_gave.toString());
                     }
                 } catch (ExecutionException e) {
@@ -191,9 +198,9 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
 
                 if (isSelectPicture) {
                     Log.d("your_photo", your_photo);
-                    my_style.put(your_photo);
+                    user.addMyStyleList(your_photo);
+                    //my_style.put(your_photo);
                     Log.d("my_style", my_style.toString());
-                    new HttpPatchRequest(my_style.toString(), myId).execute();
                 } else {
                     JSONObject json = new JSONObject();
                     boolean matched = false;
@@ -308,7 +315,6 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                 return false;
             }
         });
-
     }
 
     @Override
