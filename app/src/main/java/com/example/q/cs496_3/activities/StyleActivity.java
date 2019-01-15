@@ -1,15 +1,10 @@
 package com.example.q.cs496_3.activities;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 
 import com.example.q.cs496_3.R;
@@ -36,7 +31,7 @@ public class StyleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);//will hide the title
         getSupportActionBar().hide();
-        setContentView(R.layout.activity_style);
+        setContentView(R.layout.entry_style_select);
         String id = Profile.getCurrentProfile().getId();
         String mUrl = "http://143.248.140.106:2580/members/";
         String myUrl = mUrl + id;
@@ -97,7 +92,7 @@ public class StyleActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManger);
         mRecyclerView.setHasFixedSize(true);
 
-        mAdapter = new OtherAdapter(userData);
+        mAdapter = new OtherAdapter(userData, true);
         mRecyclerView.setAdapter(mAdapter);
     }
 

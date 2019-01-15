@@ -21,9 +21,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.example.q.cs496_3.R;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
@@ -48,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         //TODO 로그인 되어있다면, 회원일 경우(uid를 통해서 해결) 바로 information으로 이동한다. 회원이 아닌경우 로그아웃을 한다.
         if (token != null){
             String id = Profile.getCurrentProfile().getId();
+            Log.e(TAG, id);
             boolean isUser = false;
             try {
                 HttpGetRequest getRequest = new HttpGetRequest();
@@ -65,12 +65,13 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             } catch (ExecutionException e) {
-                Log.e("error", "haha");
+                Log.e(TAG, "Execution");
                 e.printStackTrace();
             } catch (InterruptedException e) {
                 e.printStackTrace();
-                Log.e("error", "haha");
+                Log.e(TAG, "Interrupted");
             } catch (JSONException e) {
+                Log.e(TAG, "JSON EXCEPTION: ");
                 e.printStackTrace();
             }
             // USER면 바로 information activity로 이동
@@ -99,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
                                         String myUrl = "http://143.248.140.106:2580/members";
                                         String get_result = getRequest.execute(myUrl).get();
                                         JSONObject jsonObj = new JSONObject(get_result);
+                                        Log.e(TAG, "Get Result: " + get_result);
                                         JSONArray members = jsonObj.getJSONArray("members");
                                         // TODO(estanie): 로직 변경하기.
                                         for (int i = 0; i < members.length(); ++i) {
@@ -108,12 +110,13 @@ public class MainActivity extends AppCompatActivity {
                                             }
                                         }
                                     } catch (ExecutionException e) {
-                                        Log.e("error", "haha");
+                                        Log.e(TAG, "Execution");
                                         e.printStackTrace();
                                     } catch (InterruptedException e) {
                                         e.printStackTrace();
-                                        Log.e("error", "haha");
+                                        Log.e(TAG, "Interrupted");
                                     } catch (JSONException e) {
+                                        Log.e(TAG, "JSON EXCEPTION: ");
                                         e.printStackTrace();
                                     }
                                     //USER면 바로 information activity로 이동

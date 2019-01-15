@@ -24,27 +24,24 @@ import com.example.q.cs496_3.models.User;
 import com.facebook.Profile;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
-
-import cz.msebera.android.httpclient.entity.StringEntity;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> {
     private ArrayList<User> userData;
+    private boolean isSelectPicture = false;
     private final String TAG = "OtherAdapter";
 
-    public OtherAdapter(ArrayList<User> data){
+    public OtherAdapter(ArrayList<User> data, boolean isSelectPicture){
         userData = data;
+        this.isSelectPicture = isSelectPicture;
     }
     
     public class viewHolder extends RecyclerView.ViewHolder {
@@ -57,14 +54,18 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
         private TextView viewHobby;
         public ImageButton heartButton;
 
-        public viewHolder(@NonNull View itemView) {
+        public viewHolder(@NonNull View itemView, boolean isSelectPicture) {
             super(itemView);
-            viewPhoto = itemView.findViewById(R.id.oEntryPhoto);
-            viewName = itemView.findViewById(R.id.oEntryName);
-            viewAge = itemView.findViewById(R.id.oEntryAge);
-            viewResidence = itemView.findViewById(R.id.oEntryResidence);
-            viewJob = itemView.findViewById(R.id.oEntryJob);
-            viewHobby =itemView.findViewById(R.id.oEntryHobby);
+            if (isSelectPicture) {
+                viewPhoto = itemView.findViewById(R.id.viewPhoto);
+            } else {
+                viewPhoto = itemView.findViewById(R.id.oEntryPhoto);
+                viewName = itemView.findViewById(R.id.oEntryName);
+                viewAge = itemView.findViewById(R.id.oEntryAge);
+                viewResidence = itemView.findViewById(R.id.oEntryResidence);
+                viewJob = itemView.findViewById(R.id.oEntryJob);
+                viewHobby = itemView.findViewById(R.id.oEntryHobby);
+            }
             heartButton = itemView.findViewById(R.id.heartSignalButton);
         }
     }
@@ -73,16 +74,15 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
     @Override
     public OtherAdapter.viewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view;
-        if (userData.get(i).getIsStyleSet() == 1) {
-
+        if (isSelectPicture) {
             view = LayoutInflater.from(viewGroup.getContext())
-                    .inflate(R.layout.activity_style, viewGroup, false);
+                    .inflate(R.layout.entry_style_select, viewGroup, false);
         }
         else {
             view = LayoutInflater.from(viewGroup.getContext())
                     .inflate(R.layout.entry_others, viewGroup, false);
         }
-        return new viewHolder(view);
+        return new viewHolder(view, isSelectPicture);
     }
 
     @Override
@@ -186,7 +186,7 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                     e.printStackTrace();
                 }
 
-                if (userData.get(i).getIsStyleSet() == 1) {
+                if (isSelectPicture) {
                     Log.d("your_photo", your_photo);
                     my_style.put(your_photo);
                     Log.d("my_style", my_style.toString());
@@ -257,25 +257,25 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
-                        //httprequestclass 로 보내서 실행시키기
-                        Log.e(TAG, "My : " + myJson.toString() + myId);
-                        Log.e(TAG, "Your: " + yourJson.toString() + takerId);
-                        new HttpPatchRequest(myJson.toString(), myId).execute();
-                        new HttpPatchRequest(yourJson.toString(), takerId).execute();
-                        Log.e(TAG, "Push Request!");
-                        new HttpPushRequest(myId, takerId).execute();
+                       //httprequestclass 로 보내서 실행시키기
+                    Log.e(TAG, "My : " + myJson.toString() + myId);
+                    Log.e(TAG, "Your: " + yourJson.toString() + takerId);
+                    new HttpPatchRequest(myJson.toString(), myId).execute();
+                    new HttpPatchRequest(yourJson.toString(), takerId).execute();
+                    Log.e(TAG, "Push Request!");
+                    new HttpPushRequest(myId, takerId).execute();
                     } else { // match 실패
                         Toast toast = Toast.makeText(getApplicationContext(), R.string.match_waiting, Toast.LENGTH_SHORT);
-                        toast.show();
-                        try {
-                            //하트 받는 사람의 received 에 내 id 넣기
-                            your_received.put(myId);
-                            json.put("received", your_received);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        try {
+                    toast.show();
+                    new HttpPushRequest("", takerId).execute();
+                    try {
+                        //하트 받는 사람의 received 에 내 id 넣기
+                        your_received.put(myId);
+                        json.put("received", your_received);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    try {
                             //httprequestclass 로 보내서 실행시키기
                             new HttpPatchRequest(json.toString(), takerId).execute();
 

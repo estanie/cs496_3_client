@@ -19,7 +19,7 @@ public class HttpPushRequest extends AsyncTask<String, Void, JsonArray> {
     public HttpPushRequest(String myId, String matchId) {
         JSONObject myJson = new JSONObject();
         try {
-            myJson.put("my_id", myId);
+            if (myId != "") myJson.put("my_id", myId);
             myJson.put("match_id", matchId);
         } catch (Exception e) {
             e.printStackTrace();

@@ -222,7 +222,7 @@ public class OtherFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManger);
         mRecyclerView.setHasFixedSize(true);
 
-        mAdapter = new OtherAdapter(userData);
+        mAdapter = new OtherAdapter(userData, false);
         mRecyclerView.setAdapter(mAdapter);
 
         return view;
