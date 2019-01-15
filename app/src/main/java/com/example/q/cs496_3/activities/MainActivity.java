@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.q.cs496_3.https.HttpGetRequest;
+import com.example.q.cs496_3.https.HttpPatchRequest;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -21,6 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.example.q.cs496_3.R;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         Log.e(TAG, "onCreate Start");
 
         //TODO 로그인 되어있다면, 회원일 경우(uid를 통해서 해결) 바로 information으로 이동한다. 회원이 아닌경우 로그아웃을 한다.
-        if (token != null){
+        if (token != null) {
             String id = Profile.getCurrentProfile().getId();
             Log.e(TAG, id);
             boolean isUser = false;
@@ -121,6 +123,10 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                     //USER면 바로 information activity로 이동
                                     if (isUser){
+                                        String token = FirebaseInstanceId.getInstance().getToken();
+                                        String str = new JSONObject().put("token", token).toString();
+                                        Log.e(TAG, str);
+                                        new HttpPatchRequest(str, id).execute();
                                         startActivity(new Intent(MainActivity.this, FragmentActivity.class));
                                         finish();
                                         //USER가 아니면 회원가입 페이지로 이동

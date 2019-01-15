@@ -99,7 +99,6 @@ public class OtherFragment extends Fragment {
             for (int i = 0;i<success.length();i++) {
                 successLists.add(success.getString(i));
             }
-            Log.e(TAG, "SIZE: "+userLists.length());
             for (int i = 0;i<userLists.length();i++) {
                  userIds.add(userLists.getJSONObject(i).getString("uId"));
             }
@@ -107,13 +106,14 @@ public class OtherFragment extends Fragment {
                 currentUserIds.add(userData.get(i).getUId());
             }
 
+            Log.e(TAG, "SIZE: "+userLists.length());
             Log.e(TAG, "나: " + me.getUId());
+            Log.e(TAG, "마지막 element" + userIds.size() + " 는? " + userIds.get(userIds.size()-1));
             for (int i = 0;i<userIds.size();i++) {
-                Log.e(TAG, userIds.get(i));
                 if (!currentUserIds.contains(userIds.get(i))) {
                     if (!userLists.getJSONObject(i).getString("gender").equals(me.getGender())
                             && !userIds.get(i).equals(me.getUId()) && !successLists.contains(userIds.get(i))
-                            && !receivedLists.get(i).contains(userIds.get(i))) {
+                            && !receivedLists.contains(userIds.get(i))) {
                         currentUserIds.add(userIds.get(i));
                         userData.add(gson.fromJson(userLists.getJSONObject(i).toString(), User.class));
                     }
