@@ -22,6 +22,7 @@ import com.example.q.cs496_3.https.HttpGetRequest;
 import com.example.q.cs496_3.https.HttpPatchRequest;
 import com.example.q.cs496_3.https.HttpPushRequest;
 import com.example.q.cs496_3.models.User;
+import com.example.q.cs496_3.models.UserSingleton;
 import com.facebook.Profile;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

@@ -231,7 +231,7 @@ public class ModifyActivity extends AppCompatActivity {
                         return;
                     }
                 }
-                User user = new User(null, editName.getText().toString(), gender, null,
+                User user = new User(editName.getText().toString(), gender, null,
                         editResidence.getText().toString(), editContact.getText().toString(),
                         editJob.getText().toString(), editHobby.getText().toString(),
                         photo, id, birthday, 0, token, 0, new JSONArray());

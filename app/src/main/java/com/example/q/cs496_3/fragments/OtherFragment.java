@@ -70,7 +70,7 @@ public class OtherFragment extends Fragment {
         userData=new ArrayList<User>();
 
         try {
-            get_my_result = getRequest.execute(myUrl).get();
+            get_my_result = getMyRequest.execute(myUrl).get();
             Log.d("my_result", get_my_result);
             JSONObject myJsonObj = new JSONObject(get_my_result);
             //.getJSONObject("member");

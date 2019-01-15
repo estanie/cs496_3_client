@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -25,9 +26,11 @@ import java.util.concurrent.ExecutionException;
 
 
 public class MatchFragment extends Fragment {
+    private final String TAG = "MatchFragment";
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManger;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private ArrayList<User> userData;
 
     @Override
@@ -63,7 +66,6 @@ public class MatchFragment extends Fragment {
 
             // Getting JSON Array node
             JSONArray jsonMembers = jsonAll.getJSONArray("members");
-            
             for (int i = 0; i < jsonMembers.length(); ++i)
             {
                 JSONObject other = jsonMembers.getJSONObject(i);
