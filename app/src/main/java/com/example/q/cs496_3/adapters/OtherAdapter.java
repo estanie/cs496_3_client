@@ -43,17 +43,17 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
     private final String TAG = "OtherAdapter";
     JSONArray my_style = new JSONArray();
 
-    public OtherAdapter(ArrayList<User> data, boolean isSelectPicture){
+    public OtherAdapter(ArrayList<User> data, boolean isSelectPicture) {
         userData = data;
         this.isSelectPicture = isSelectPicture;
     }
 
-    public OtherAdapter(ArrayList<User> data, boolean isSelectPicture, User user){
+    public OtherAdapter(ArrayList<User> data, boolean isSelectPicture, User user) {
         userData = data;
         this.isSelectPicture = isSelectPicture;
         this.user = user;
     }
-    
+
     public class viewHolder extends RecyclerView.ViewHolder {
         private RelativeLayout viewEntry;
         private ImageView viewPhoto;
@@ -79,7 +79,7 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
             heartButton = itemView.findViewById(R.id.heartSignalButton);
         }
     }
-    
+
     @NonNull
     @Override
     public OtherAdapter.viewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -87,8 +87,13 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
         if (isSelectPicture) {
             view = LayoutInflater.from(viewGroup.getContext())
                     .inflate(R.layout.entry_style_select, viewGroup, false);
-        }
-        else {
+            Log.e(TAG, "user data: " + userData.get(i).toString());
+            if (UserSingleton.getInstance().getMyStyle(userData.get(i).getUId())) {
+                Log.d("islike", "hhhh");
+                ImageButton heartButton = (ImageButton) view.findViewById(R.id.heartSignalButton);
+                heartButton.setImageResource(R.drawable.red_heart);
+            }
+        } else {
             view = LayoutInflater.from(viewGroup.getContext())
                     .inflate(R.layout.entry_others, viewGroup, false);
         }
@@ -98,20 +103,25 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
     @Override
     public void onBindViewHolder(@NonNull final OtherAdapter.viewHolder holder, final int i) {
         //holder.viewPhoto;
+        Uri uri = null;
         holder.setIsRecyclable(false);
-            Uri uri = null;
-            ImageAdapter imageAdapter = new ImageAdapter(holder.viewPhoto.getContext(), uri);
-            //ImageView imageView = new ImageView(getContext());
-            RequestManager requestManager = Glide.with(imageAdapter.getContext());
-            // Create request builder and load image.
-            RequestBuilder requestBuilder = requestManager.load("http://143.248.140.106:2580/uploads/" + userData.get(i).getPhoto());
-            //requestBuilder = requestBuilder.apply(new RequestOptions().override(250, 250));
-            // Show image into target imageview.
-            requestBuilder.apply(new RequestOptions()
+        ImageAdapter imageAdapter = new ImageAdapter(holder.viewPhoto.getContext(), uri);
+        //ImageView imageView = new ImageView(getContext());
+        RequestManager requestManager = Glide.with(imageAdapter.getContext());
+        // Create request builder and load image.
+        RequestBuilder requestBuilder = requestManager.load("http://143.248.140.106:2580/uploads/" + userData.get(i).getPhoto());
+        //requestBuilder = requestBuilder.apply(new RequestOptions().override(250, 250));
+        // Show image into target imageview.
+        requestBuilder.apply(new RequestOptions()
                 .centerCrop())
                 .into(holder.viewPhoto);
-            final String takerId = userData.get(i).getUId();
-            final String myId = Profile.getCurrentProfile().getId();
+        if (UserSingleton.getInstance().getMyStyle(userData.get(i).getUId())) {
+            Log.d("islike", "hhhh");
+            ImageButton heartButton = (ImageButton) holder.heartButton;
+            heartButton.setImageResource(R.drawable.red_heart);
+        }
+        final String takerId = userData.get(i).getUId();
+        final String myId = Profile.getCurrentProfile().getId();
         if (userData.get(i).getIsStyleSet() == 0) {
             holder.viewPhoto.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             holder.viewName.setText(userData.get(i).getName());
@@ -121,10 +131,6 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
             holder.viewHobby.setText(userData.get(i).getHobby());
             if (userData.get(i).getLike_me() == 1) {
                 holder.heartButton.setImageResource(R.drawable.heart_to_me_2);
-            }
-            if (userData.get(i).getIsILike()) {
-                Log.d("islike", "hhhh");
-                holder.heartButton.setImageResource(R.drawable.red_heart);
             }
         }
 
@@ -271,25 +277,25 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                       //httprequestclass 로 보내서 실행시키기
-                    Log.e(TAG, "My : " + myJson.toString() + myId);
-                    Log.e(TAG, "Your: " + yourJson.toString() + takerId);
-                    new HttpPatchRequest(myJson.toString(), myId).execute();
-                    new HttpPatchRequest(yourJson.toString(), takerId).execute();
-                    Log.e(TAG, "Push Request!");
-                    new HttpPushRequest(myId, takerId).execute();
+                        //httprequestclass 로 보내서 실행시키기
+                        Log.e(TAG, "My : " + myJson.toString() + myId);
+                        Log.e(TAG, "Your: " + yourJson.toString() + takerId);
+                        new HttpPatchRequest(myJson.toString(), myId).execute();
+                        new HttpPatchRequest(yourJson.toString(), takerId).execute();
+                        Log.e(TAG, "Push Request!");
+                        new HttpPushRequest(myId, takerId).execute();
                     } else { // match 실패
                         Toast toast = Toast.makeText(getApplicationContext(), R.string.match_waiting, Toast.LENGTH_SHORT);
-                    toast.show();
-                    new HttpPushRequest("", takerId).execute();
-                    try {
-                        //하트 받는 사람의 received 에 내 id 넣기
-                        your_received.put(myId);
-                        json.put("received", your_received);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    try {
+                        toast.show();
+                        new HttpPushRequest("", takerId).execute();
+                        try {
+                            //하트 받는 사람의 received 에 내 id 넣기
+                            your_received.put(myId);
+                            json.put("received", your_received);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        try {
                             //httprequestclass 로 보내서 실행시키기
                             new HttpPatchRequest(json.toString(), takerId).execute();
 
@@ -316,8 +322,8 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
 
                 //하트 아이콘 바꾸기
                 holder.heartButton.setImageResource(R.drawable.red_heart);
-                userData.get(i).setIsILike(true);
-                if (userData.get(i).getIsILike())
+                UserSingleton.getInstance().setMyStyleTrue(takerId);
+                if (UserSingleton.getInstance().getMyStyle(takerId))
                     Log.d("isILike", "hohoho");
                 return false;
             }

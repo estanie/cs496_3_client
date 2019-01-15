@@ -3,10 +3,14 @@ package com.example.q.cs496_3.models;
 import android.util.Log;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserSingleton {
+    public final String TAG = "UserSingleton";
     public static UserSingleton instance;
     private User user;
+    private Map<String, Boolean> isMyStyleList = new HashMap<>();
     private UserSingleton() { }
     static {
         try {
@@ -16,6 +20,16 @@ public class UserSingleton {
         }
     }
 
+    public void setMyStyleTrue(String uId) {
+        Log.e(TAG, "Set" + uId);
+        isMyStyleList.put(uId, true);
+    }
+
+    public boolean getMyStyle(String uId) {
+        Log.e(TAG, "Get" + uId);
+        if (isMyStyleList.get(uId) != null) return true;
+        return false;
+    }
     public static UserSingleton getInstance() {
         return instance;
     }

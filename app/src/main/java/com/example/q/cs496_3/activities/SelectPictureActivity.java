@@ -15,6 +15,7 @@ import com.example.q.cs496_3.adapters.OtherAdapter;
 import com.example.q.cs496_3.https.HttpGetRequest;
 import com.example.q.cs496_3.https.HttpPatchRequest;
 import com.example.q.cs496_3.models.User;
+import com.example.q.cs496_3.models.UserSingleton;
 import com.facebook.Profile;
 
 import org.json.JSONArray;
@@ -47,7 +48,6 @@ public class SelectPictureActivity extends AppCompatActivity {
 
         String mUrl = "http://143.248.140.106:2580/members/";
         String myUrl = mUrl + myId;
-
 
         String myGender;
         String gender="";
@@ -135,9 +135,6 @@ public class SelectPictureActivity extends AppCompatActivity {
         mLayoutManager = new GridLayoutManager(this, 2);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
-
-        // TODO(estanie): mImageData 테스트용임. Random 한 이미지 서버로부터 받기..
-
 
         mAdapter = new OtherAdapter(userData, true, user);
 

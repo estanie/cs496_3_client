@@ -56,8 +56,6 @@ public class OtherFragment extends Fragment {
         String myUrl = mUrl + id;
         //String to place our result in
 
-
-
         // TODO(gayeon): 로딩중이니까 나중에 다시 시도하라고 해주기!
         try {
             JSONArray style = new JSONObject(new HttpGetRequest().execute(myUrl).get())
