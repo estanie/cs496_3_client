@@ -15,6 +15,8 @@ public class User {
     private int like_me;
     private String token;
     private int isStyleSet;
+    private boolean isILike = false;
+    private boolean isMyStyle = false;
 
     public User() {}
     public User(String image, String name, String gender, String age, String residence, String contact,
@@ -79,5 +81,11 @@ public class User {
 
     public int getIsStyleSet() {return isStyleSet;}
     public void setIsStyleSet(int isStyleSet) {this.isStyleSet = isStyleSet;}
+
+    public boolean getIsILike() {return isILike;}
+    public void setIsILike(boolean isILike) {this.isILike = isILike;}
+
+    public boolean getIsMyStyle() {return isMyStyle;}
+    public void setIsMyStyle(boolean isMyStyle) {this.isMyStyle = isMyStyle;}
 
 }

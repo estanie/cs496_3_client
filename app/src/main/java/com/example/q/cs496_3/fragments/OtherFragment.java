@@ -30,7 +30,6 @@ public class OtherFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManger;
     private ArrayList<User> userData;
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +77,6 @@ public class OtherFragment extends Fragment {
             myReceived = member.getJSONArray("received");
             mySorted = member.getJSONArray("sorted");
             Log.d("yayaya", "yiyi");
-
             for (int i = 0; i < myReceived.length(); ++i)
             {
                 String giverId = myReceived.getString(i);
@@ -102,7 +100,7 @@ public class OtherFragment extends Fragment {
                 user1.setJob(job);
                 user1.setPhoto(photo);
                 user1.setUId(giverId);
-                Log.d("like_me","hahaha");
+                user1.setContact(contact);
                 user1.setLike_me(1);
                 userData.add(user1);
             }
@@ -154,7 +152,6 @@ public class OtherFragment extends Fragment {
 
             // Getting JSON Array node
             JSONArray members = jsonObj.getJSONArray("members");
-
             for (int i = 0; i < members.length(); ++i) {
                 JSONObject m = members.getJSONObject(i);
                 gender = m.getString("gender");
@@ -166,9 +163,7 @@ public class OtherFragment extends Fragment {
                         for (int j = 0; j < mySuccess.length(); ++j)
                         {
                             if (id.equals(mySuccess.getString(j)))
-                            {
-                                run = false;
-                            }
+                            { run = false; }
                         }
                     }
                     if (myReceived != null)
@@ -176,9 +171,7 @@ public class OtherFragment extends Fragment {
                         for (int j = 0; j < myReceived.length(); ++j)
                         {
                             if (id.equals(myReceived.getString(j)))
-                            {
-                                run = false;
-                            }
+                            { run = false; }
                         }
                     }
                     if (run) {
@@ -198,6 +191,7 @@ public class OtherFragment extends Fragment {
                         user1.setJob(job);
                         user1.setPhoto(photo);
                         user1.setUId(id);
+                        user1.setContact(contact);
                         userData.add(user1);
                     }
                     else {
@@ -221,7 +215,6 @@ public class OtherFragment extends Fragment {
         mLayoutManger = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManger);
         mRecyclerView.setHasFixedSize(true);
-
         mAdapter = new OtherAdapter(userData, false);
         mRecyclerView.setAdapter(mAdapter);
 

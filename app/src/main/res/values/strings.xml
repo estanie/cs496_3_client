@@ -17,5 +17,6 @@
     <string name="match_success">운명적 만남이 시작됐어요.</string>
     <string name="match_waiting">기다림의 설렘을 느껴봐요!</string>
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <string name="select_more">10명 이상 선택해 주세요.</string>
 
 </resources>

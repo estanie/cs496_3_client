@@ -113,7 +113,6 @@ public class SelectPictureActivity extends AppCompatActivity {
                 // TODO(estanie): 10장 이상 골랐는지 확인하고 넘어가고, 데이터 서버에 보내서 계산하게 시키기.
 
 
-
                 Intent intent = new Intent(SelectPictureActivity.this, FragmentActivity.class);
                 startActivity(intent);
                 setResult(RESULT_OK);
