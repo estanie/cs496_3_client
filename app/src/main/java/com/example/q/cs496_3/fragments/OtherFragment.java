@@ -80,7 +80,7 @@ public class OtherFragment extends Fragment {
             mAdapter.notifyDataSetChanged();
             mView.findViewById(R.id.progressBar2).setVisibility(View.INVISIBLE);
             mView.findViewById(R.id.waitingText).setVisibility(View.INVISIBLE);
-            if (style!= null && style.length() == 0) {
+            if (userData == null || (userData!= null && userData.size() == 0)) {
                 mView.findViewById(R.id.findNewUser).setVisibility(View.VISIBLE);
             }
     }
