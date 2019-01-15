@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -30,6 +31,7 @@ public class OtherFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManger;
+    private SwipeRefreshLayout swipeContainer;
     private ArrayList<User> userData;
     private View mView;
     User user = new User();
@@ -46,6 +48,18 @@ public class OtherFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mAdapter = new OtherAdapter(userData, false, user);
         mRecyclerView.setAdapter(mAdapter);
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshList();
+            }
+        });
+        swipeContainer.setColorSchemeColors(getResources().getColor(android.R.color.holo_blue_bright),
+                getResources().getColor(android.R.color.holo_green_light),
+                getResources().getColor(android.R.color.holo_orange_light),
+                getResources().getColor(android.R.color.holo_red_light));
+
         return view;
     }
 
@@ -53,6 +67,10 @@ public class OtherFragment extends Fragment {
     public void setUserVisibleHint(boolean isFragmentVisible) {
         if (!isFragmentVisible) return;
         if (mAdapter == null) return;
+        refreshList();
+    }
+
+    private void refreshList() {
         String id = Profile.getCurrentProfile().getId();
         String mUrl = "http://143.248.140.106:2580/members/";
         String myUrl = mUrl + id;
@@ -100,20 +118,18 @@ public class OtherFragment extends Fragment {
                 successLists.add(success.getString(i));
             }
             for (int i = 0;i<userLists.length();i++) {
-                 userIds.add(userLists.getJSONObject(i).getString("uId"));
+                userIds.add(userLists.getJSONObject(i).getString("uId"));
             }
-            for (int i = 0;i<currentUserIds.size();i++) {
+            for (int i = 0;i<userData.size();i++) {
                 currentUserIds.add(userData.get(i).getUId());
             }
 
-            Log.e(TAG, "SIZE: "+userLists.length());
-            Log.e(TAG, "나: " + me.getUId());
-            Log.e(TAG, "마지막 element" + userIds.size() + " 는? " + userIds.get(userIds.size()-1));
             for (int i = 0;i<userIds.size();i++) {
                 if (!currentUserIds.contains(userIds.get(i))) {
                     if (!userLists.getJSONObject(i).getString("gender").equals(me.getGender())
                             && !userIds.get(i).equals(me.getUId()) && !successLists.contains(userIds.get(i))
                             && !receivedLists.contains(userIds.get(i))) {
+                        Log.e(TAG, userIds.get(i));
                         currentUserIds.add(userIds.get(i));
                         userData.add(gson.fromJson(userLists.getJSONObject(i).toString(), User.class));
                     }
@@ -128,5 +144,7 @@ public class OtherFragment extends Fragment {
         if (userData == null || (userData != null && userData.size() == 0)) {
             mView.findViewById(R.id.findNewUser).setVisibility(View.VISIBLE);
         }
+        swipeContainer.setRefreshing(false);
     }
+
 }

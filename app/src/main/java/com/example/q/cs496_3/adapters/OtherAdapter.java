@@ -353,6 +353,16 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
         });
     }
 
+    public void clear() {
+        userData.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(ArrayList<User> list) {
+        userData.addAll(list);
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
         return userData.size();
