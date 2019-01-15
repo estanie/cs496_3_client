@@ -22,9 +22,8 @@ public class User {
     private JSONArray myStyleList = new JSONArray();
 
     public User() {}
-    public User(String image, String name, String gender, String age, String residence, String contact,
+    public User(String name, String gender, String age, String residence, String contact,
          String job, String hobby, String photo, String uId, String date_of_birth, int like_me, String token, int isStyleSet, JSONArray myStyleList) {
-        this.image = image;
         this.name = name;
         this.gender = gender;
         this.age = age;
