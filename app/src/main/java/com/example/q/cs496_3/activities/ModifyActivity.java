@@ -134,7 +134,7 @@ public class ModifyActivity extends AppCompatActivity {
                 Gson gson = new GsonBuilder().create();
                 String jsons = myJsonObj.getString("member");
                 if (!myJsonObj.getJSONObject("member").getJSONArray("style").toString().equals("[]")
-                        && !myJsonObj.getJSONObject("member").getJSONArray("sorted").toString().equals("[]")) {
+                        || myJsonObj.getJSONObject("member").getJSONArray("sorted").toString().equals("[]")) {
                     isUserStyleSelected = true;
                 }
                 Log.e(TAG, jsons);
