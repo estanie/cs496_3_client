@@ -37,13 +37,6 @@ public class StyleActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);//will hide the title
         getSupportActionBar().hide();
         setContentView(R.layout.activity_style);
-    }
-
-    @Nullable
-    //@Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_others,  container, false);
-
         String id = Profile.getCurrentProfile().getId();
         String mUrl = "http://143.248.140.106:2580/members/";
         String myUrl = mUrl + id;
@@ -82,8 +75,8 @@ public class StyleActivity extends AppCompatActivity {
                     photo = m.getString("photo");
                     User user1 = new User();
                     user1.setPhoto(photo);
-                    user1.setId(id);
-                    user1.setStyle(1);
+                    user1.setUId(id);
+                    user1.setIsStyleSet(1);
                     userData.add(user1);
                 }
             }
@@ -98,16 +91,14 @@ public class StyleActivity extends AppCompatActivity {
             Log.e("!!!!!","nullpointerexception");
         }
 
-        mRecyclerView = view.findViewById(R.id.othersRecyclerView);
+        mRecyclerView = findViewById(R.id.othersRecyclerView);
 
-        mLayoutManger = new LinearLayoutManager(this);
+        mLayoutManger = new LinearLayoutManager(getApplicationContext());
         mRecyclerView.setLayoutManager(mLayoutManger);
         mRecyclerView.setHasFixedSize(true);
 
         mAdapter = new OtherAdapter(userData);
         mRecyclerView.setAdapter(mAdapter);
-
-        return view;
     }
 
 }

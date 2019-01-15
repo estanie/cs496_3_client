@@ -135,6 +135,7 @@ public class ModifyActivity extends AppCompatActivity {
                 if (!myJsonObj.getJSONObject("member").getJSONArray("style").toString().equals("[]")) {
                     isUserStyleSelected = true;
                 }
+                Log.e(TAG, jsons);
                 User user = gson.fromJson(jsons, User.class);
                 name = user.getName();
                 gender = user.getGender();
@@ -165,6 +166,7 @@ public class ModifyActivity extends AppCompatActivity {
             id = intent.getStringExtra("id");
             name = intent.getStringExtra("name");
             birthday = intent.getStringExtra("birthday");//생년월일 순서 정렬
+            birthday = changeOrder(birthday);
             gender = intent.getStringExtra("gender");
         }
 
@@ -217,7 +219,7 @@ public class ModifyActivity extends AppCompatActivity {
 
                 //데이터 유효성 검사 Photo부분, 신규가입이거나 사진변경을 했으면 확인해야함
                 if (!isMember || isPhotoChange) {
-                    photo = new File(path).getName();
+                    if (path != null) photo = new File(path).getName();
                     try {
                         new HttpUploadRequest(path, getApplicationContext()).execute();
                     } catch (NullPointerException e) {
@@ -234,7 +236,6 @@ public class ModifyActivity extends AppCompatActivity {
                         photo, id, birthday, 0, token, 0);
 
                 // 생년월일 -> 나이
-                birthday = changeOrder(birthday);
 
                 // 여기가 데이터 보내는 부분. 아래있는 형식대로 데이터를 넘기면 된다.
                 try {
@@ -260,10 +261,10 @@ public class ModifyActivity extends AppCompatActivity {
                     startActivity(new Intent(
                             ModifyActivity.this, FragmentActivity.class));
                 } else {
+//                    startActivity(new Intent(
+//                            ModifyActivity.this, StyleActivity.class));
                     startActivity(new Intent(
-                            ModifyActivity.this, StyleActivity.class));
-                    //startActivity(new Intent(
-                            //ModifyActivity.this, SelectPictureActivity.class));
+                            ModifyActivity.this, SelectPictureActivity.class));
                 }
                 setResult(RESULT_OK);
                 finish();

@@ -72,8 +72,16 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
     @NonNull
     @Override
     public OtherAdapter.viewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.entry_others, viewGroup, false);
+        View view;
+        if (userData.get(i).getIsStyleSet() == 1) {
+
+            view = LayoutInflater.from(viewGroup.getContext())
+                    .inflate(R.layout.activity_style, viewGroup, false);
+        }
+        else {
+            view = LayoutInflater.from(viewGroup.getContext())
+                    .inflate(R.layout.entry_others, viewGroup, false);
+        }
         return new viewHolder(view);
     }
 
@@ -81,28 +89,28 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
     public void onBindViewHolder(@NonNull final OtherAdapter.viewHolder holder, final int i) {
         //holder.viewPhoto;
 
-
-        Uri uri = null;
-        ImageAdapter imageAdapter = new ImageAdapter(holder.viewPhoto.getContext(), uri);
-        //ImageView imageView = new ImageView(getContext());
-        RequestManager requestManager = Glide.with(imageAdapter.getContext());
-        // Create request builder and load image.
-        RequestBuilder requestBuilder = requestManager.load("http://143.248.140.106:2580/uploads/"+userData.get(i).getPhoto());
-        //requestBuilder = requestBuilder.apply(new RequestOptions().override(250, 250));
-        // Show image into target imageview.
-        Log.d("PHOTOPHOTO",userData.get(i).getPhoto()==null?"1":"WOOOW");
-        requestBuilder.into(holder.viewPhoto);
-        final String takerId = userData.get(i).getUId();
-        final String myId = Profile.getCurrentProfile().getId();
-        holder.viewPhoto.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        holder.viewName.setText(userData.get(i).getName());
-        holder.viewAge.setText(userData.get(i).getAge());
-        holder.viewResidence.setText(userData.get(i).getResidence());
-        holder.viewJob.setText(userData.get(i).getJob());
-        holder.viewHobby.setText(userData.get(i).getHobby());
-        if (userData.get(i).getLike_me() == 1)
-        {
-            holder.heartButton.setImageResource(R.drawable.heart_to_me_2);
+            Uri uri = null;
+            ImageAdapter imageAdapter = new ImageAdapter(holder.viewPhoto.getContext(), uri);
+            //ImageView imageView = new ImageView(getContext());
+            RequestManager requestManager = Glide.with(imageAdapter.getContext());
+            // Create request builder and load image.
+            RequestBuilder requestBuilder = requestManager.load("http://143.248.140.106:2580/uploads/" + userData.get(i).getPhoto());
+            //requestBuilder = requestBuilder.apply(new RequestOptions().override(250, 250));
+            // Show image into target imageview.
+            Log.d("PHOTOPHOTO", userData.get(i).getPhoto() == null ? "1" : "WOOOW");
+            requestBuilder.into(holder.viewPhoto);
+            final String takerId = userData.get(i).getUId();
+            final String myId = Profile.getCurrentProfile().getId();
+        if (userData.get(i).getIsStyleSet() == 0) {
+            holder.viewPhoto.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            holder.viewName.setText(userData.get(i).getName());
+            holder.viewAge.setText(userData.get(i).getAge());
+            holder.viewResidence.setText(userData.get(i).getResidence());
+            holder.viewJob.setText(userData.get(i).getJob());
+            holder.viewHobby.setText(userData.get(i).getHobby());
+            if (userData.get(i).getLike_me() == 1) {
+                holder.heartButton.setImageResource(R.drawable.heart_to_me_2);
+            }
         }
 
         holder.heartButton.setOnLongClickListener(new View.OnLongClickListener() {
@@ -178,8 +186,10 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
                     e.printStackTrace();
                 }
 
-                if (userData.get(i).getStyle() == 1) {
+                if (userData.get(i).getIsStyleSet() == 1) {
+                    Log.d("your_photo", your_photo);
                     my_style.put(your_photo);
+                    Log.d("my_style", my_style.toString());
                     new HttpPatchRequest(my_style.toString(), myId).execute();
                 } else {
                     JSONObject json = new JSONObject();

@@ -11,10 +11,19 @@ import android.view.View;
 import android.view.Window;
 
 import com.example.q.cs496_3.R;
+import com.example.q.cs496_3.adapters.OtherAdapter;
 import com.example.q.cs496_3.adapters.SelectPictureAdapter;
+import com.example.q.cs496_3.https.HttpGetRequest;
 import com.example.q.cs496_3.models.Image;
+import com.example.q.cs496_3.models.User;
+import com.facebook.Profile;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 public class SelectPictureActivity extends AppCompatActivity {
     private final String TAG = "SelectPictureActivity";
@@ -22,7 +31,7 @@ public class SelectPictureActivity extends AppCompatActivity {
     private FloatingActionButton mFab;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private ArrayList<Image> mImageData;
+    private ArrayList<User> userData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +41,62 @@ public class SelectPictureActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);//will hide the title
         getSupportActionBar().hide();
         setContentView(R.layout.activity_select_picture);
-        mImageData = new ArrayList<>();
+        userData = new ArrayList<>();
+
+        String id = Profile.getCurrentProfile().getId();
+        String mUrl = "http://143.248.140.106:2580/members/";
+        String myUrl = mUrl + id;
+
+        String myGender;
+        String gender="";
+        String photo="";
+        //String to place our result in
+        String get_result = "";
+        String get_my_result;
+        //Instantiate new instance of our class GET
+        HttpGetRequest getRequest = new HttpGetRequest();
+        HttpGetRequest getMyRequest = new HttpGetRequest();
+        //Perform the doInBackground method, passing in our url
+        userData=new ArrayList<User>();
+
+        try {
+            get_my_result = getRequest.execute(myUrl).get();
+            Log.d("my_result", get_my_result);
+            JSONObject myJsonObj = new JSONObject(get_my_result);
+            //.getJSONObject("member");
+            JSONObject member = myJsonObj.getJSONObject("member");
+            myGender = member.getString("gender");
+
+            get_result = getMyRequest.execute(mUrl).get();
+            JSONObject jsonObj = new JSONObject(get_result); //
+
+            // Getting JSON Array node
+            JSONArray members = jsonObj.getJSONArray("members");
+
+            for (int i = 0; i < members.length(); ++i) {
+                JSONObject m = members.getJSONObject(i);
+                gender = m.getString("gender");
+                id = m.getString("uId");
+                if (!gender.equals(myGender)) {
+                    photo = m.getString("photo");
+                    User user1 = new User();
+                    user1.setPhoto(photo);
+                    user1.setUId(id);
+                    user1.setIsStyleSet(1);
+                    userData.add(user1);
+                }
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e){
+            e.printStackTrace();
+            Log.e("!!!!!","nullpointerexception");
+        }
+
         mRecyclerView = (RecyclerView) findViewById(R.id.imageGrid);
         mFab = (FloatingActionButton) findViewById(R.id.selectConfirm);
         mLayoutManager = new GridLayoutManager(this, 2);
@@ -40,11 +104,9 @@ public class SelectPictureActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
 
         // TODO(estanie): mImageData 테스트용임. Random 한 이미지 서버로부터 받기..
-        mImageData.add(new Image("https://i.pinimg.com/originals/5d/72/6d/5d726db2ead085c1ab35e41e8390df2b.jpg"));
-        mImageData.add(new Image("http://www.topstarnews.net/news/photo/201811/530683_197566_198_org.jpg"));
-        mImageData.add(new Image("http://image.chosun.com/sitedata/image/201605/16/2016051602048_0.jpg"));
-        mImageData.add(new Image("http://image.kmib.co.kr/online_image/2017/1018/201710180000_13200923832185_1.jpg"));
-        mAdapter = new SelectPictureAdapter(getApplicationContext(), mImageData);
+
+
+        mAdapter = new OtherAdapter(userData);
         mRecyclerView.setAdapter(mAdapter);
 
         mFab.setOnClickListener(new View.OnClickListener() {

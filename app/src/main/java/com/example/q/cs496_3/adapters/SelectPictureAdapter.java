@@ -56,10 +56,6 @@ public class SelectPictureAdapter extends RecyclerView.Adapter<SelectPictureAdap
             @Override
             public void onClick(View v) {
                 imageData.get(i).toggle();
-                ResizeAnimation resizeAnimation = new ResizeAnimation(
-                        holder.selectImage, imageData.get(i).isSelected());
-                resizeAnimation.setDuration(500);
-                holder.selectImage.startAnimation(resizeAnimation);
                 Log.e(TAG, "Clicked " + i);
             }
         });
