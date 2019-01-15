@@ -1,5 +1,6 @@
 package com.example.q.cs496_3.fragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -64,7 +65,6 @@ public class OtherFragment extends Fragment {
         String get_my_result;
         String get_giver_result;
         //Instantiate new instance of our class GET
-        HttpGetRequest getRequest = new HttpGetRequest();
         HttpGetRequest getMyRequest = new HttpGetRequest();
         //Perform the doInBackground method, passing in our url
         userData=new ArrayList<User>();
@@ -112,6 +112,7 @@ public class OtherFragment extends Fragment {
 
             while (mySorted.length() == 0)
             {
+                HttpGetRequest getRequest = new HttpGetRequest();
                 get_my_result = getRequest.execute(myUrl).get();
                 Log.d("my_result", get_my_result);
                 JSONObject myJsonObj2 = new JSONObject(get_my_result);
