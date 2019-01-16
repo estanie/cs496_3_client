@@ -88,11 +88,11 @@ public class OtherAdapter extends RecyclerView.Adapter<OtherAdapter.viewHolder> 
             view = LayoutInflater.from(viewGroup.getContext())
                     .inflate(R.layout.entry_style_select, viewGroup, false);
             Log.e(TAG, "user data: " + userData.get(i).toString());
-            if (UserSingleton.getInstance().getMyStyle(userData.get(i).getUId())) {
-                Log.d("islike", "hhhh");
-                ImageButton heartButton = (ImageButton) view.findViewById(R.id.heartSignalButton);
-                heartButton.setImageResource(R.drawable.new_red_heart);
-            }
+//            if (UserSingleton.getInstance().getMyStyle(userData.get(i).getUId())) {
+//                Log.d("islike", "hhhh");
+//                ImageButton heartButton = (ImageButton) view.findViewById(R.id.heartSignalButton);
+//                heartButton.setImageResource(R.drawable.new_red_heart);
+//            }
         } else {
             view = LayoutInflater.from(viewGroup.getContext())
                     .inflate(R.layout.entry_others, viewGroup, false);

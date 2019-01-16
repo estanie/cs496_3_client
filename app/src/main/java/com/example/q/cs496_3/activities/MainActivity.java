@@ -169,6 +169,14 @@ public class MainActivity extends AppCompatActivity {
                     finish();
                     break;
                 }else{
+                    String id = Profile.getCurrentProfile().getId();
+                    try {
+                        String str = new JSONObject().put("token", "").toString();
+                        Log.e(TAG, str);
+                        new HttpPatchRequest(str, id).execute();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     LoginManager.getInstance().logOut();
                     break;
                 }

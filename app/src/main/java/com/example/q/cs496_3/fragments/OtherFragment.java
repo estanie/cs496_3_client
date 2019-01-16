@@ -83,6 +83,7 @@ public class OtherFragment extends Fragment {
         JSONArray received = null;
         JSONArray success = null;
         JSONObject json = null;
+        JSONArray sorted = null;
         User me = null;
         try {
             Gson gson = new GsonBuilder().create();
@@ -92,8 +93,9 @@ public class OtherFragment extends Fragment {
             style = json.getJSONArray("style");
             received = json.getJSONArray("received");
             success = json.getJSONArray("success");
+            sorted = json.getJSONArray("sorted");
             userData.clear();
-            do {
+//            do {
                 myUrl = mUrl + "other/" + id;
                 JSONArray userList = new JSONObject(new HttpGetRequest().execute(myUrl).get())
                         .getJSONArray("members");
@@ -103,35 +105,37 @@ public class OtherFragment extends Fragment {
                 for (int i = 0; i < userList.length(); i++) {
                     userData.add(gson.fromJson(userList.getJSONObject(i).toString(), User.class));
                 }
-            } while (userData == null && style != null && style.length() != 0);
+//            } while (userData == null && style != null && style.length() != 0);
             String newUrls = "http://143.248.140.106:2580/members";
             JSONArray userLists = new JSONObject(new HttpGetRequest().execute(newUrls).get())
                     .getJSONArray("members");
-            ArrayList<String> userIds = new ArrayList<>();
-            ArrayList<String> currentUserIds = new ArrayList<>();
-            ArrayList<String> successLists = new ArrayList<>();
-            ArrayList<String> receivedLists = new ArrayList<>();
-            for (int i = 0;i<received.length();i++) {
-                receivedLists.add(received.getString(i));
-            }
-            for (int i = 0;i<success.length();i++) {
-                successLists.add(success.getString(i));
-            }
-            for (int i = 0;i<userLists.length();i++) {
-                userIds.add(userLists.getJSONObject(i).getString("uId"));
-            }
-            for (int i = 0;i<userData.size();i++) {
-                currentUserIds.add(userData.get(i).getUId());
-            }
+            if (userData.size() != 0) {
+                ArrayList<String> userIds = new ArrayList<>();
+                ArrayList<String> currentUserIds = new ArrayList<>();
+                ArrayList<String> successLists = new ArrayList<>();
+                ArrayList<String> receivedLists = new ArrayList<>();
+                for (int i = 0; i < received.length(); i++) {
+                    receivedLists.add(received.getString(i));
+                }
+                for (int i = 0; i < success.length(); i++) {
+                    successLists.add(success.getString(i));
+                }
+                for (int i = 0; i < userLists.length(); i++) {
+                    userIds.add(userLists.getJSONObject(i).getString("uId"));
+                }
+                for (int i = 0; i < userData.size(); i++) {
+                    currentUserIds.add(userData.get(i).getUId());
+                }
 
-            for (int i = 0;i<userIds.size();i++) {
-                if (!currentUserIds.contains(userIds.get(i))) {
-                    if (!userLists.getJSONObject(i).getString("gender").equals(me.getGender())
-                            && !userIds.get(i).equals(me.getUId()) && !successLists.contains(userIds.get(i))
-                            && !receivedLists.contains(userIds.get(i))) {
-                        Log.e(TAG, userIds.get(i));
-                        currentUserIds.add(userIds.get(i));
-                        userData.add(gson.fromJson(userLists.getJSONObject(i).toString(), User.class));
+                for (int i = 0; i < userIds.size(); i++) {
+                    if (!currentUserIds.contains(userIds.get(i))) {
+                        if (!userLists.getJSONObject(i).getString("gender").equals(me.getGender())
+                                && !userIds.get(i).equals(me.getUId()) && !successLists.contains(userIds.get(i))
+                                && !receivedLists.contains(userIds.get(i))) {
+                            Log.e(TAG, userIds.get(i));
+                            currentUserIds.add(userIds.get(i));
+                            userData.add(gson.fromJson(userLists.getJSONObject(i).toString(), User.class));
+                        }
                     }
                 }
             }

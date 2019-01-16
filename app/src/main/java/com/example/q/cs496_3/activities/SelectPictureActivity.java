@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.Toast;
 
 import com.example.q.cs496_3.R;
 import com.example.q.cs496_3.adapters.OtherAdapter;
@@ -139,7 +140,8 @@ public class SelectPictureActivity extends AppCompatActivity {
         mAdapter = new OtherAdapter(userData, true, user);
 
         mRecyclerView.setAdapter(mAdapter);
-
+        Toast.makeText(getApplicationContext(), "마음에 드는 사진을 선택해주세요.",
+                Toast.LENGTH_SHORT).show();
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
